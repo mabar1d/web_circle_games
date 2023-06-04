@@ -42,7 +42,7 @@
                 <img src="{{asset('assets/web_public/img/logo.png')}}" alt="">
             </a>
             <div class="user-panel" style="margin-top: 10px;">
-                <a href="{{url('login')}}">Login</a> / <a href="{{url('register')}}">Register</a>
+                <a href="{{url('login')}}">test</a> / <a href="{{url('register')}}">Register</a>
             </div>
             <!-- responsive -->
             <div class="nav-switch">
