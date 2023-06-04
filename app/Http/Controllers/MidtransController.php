@@ -21,10 +21,6 @@ class MidtransController extends BaseController
         $response->code = '';
         $response->desc = '';
         $requestData = $request->input();
-        DB::beginTransaction();
-        try {
-        } catch (Exception $e) {
-        }
         return view('public.midtrans.finish_payment', []);
     }
 }
