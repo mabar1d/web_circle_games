@@ -30,5 +30,7 @@ Route::get('/look_tournament', [TournamentController::class, 'lookTournament']);
 Route::post('/get_tournament_tree_match', [TournamentController::class, 'getTournamentTreeMatch']);
 
 $router->group(['prefix' => 'callbackMidtrans'], function ($router) {
-    $router->get('finish', [MidtransController::class, 'finish']);
+    $router->get('finish', [MidtransController::class, 'finishPayment']);
+    $router->get('unfinish', [MidtransController::class, 'unfinishPayment']);
+    $router->get('error', [MidtransController::class, 'errorPayment']);
 });

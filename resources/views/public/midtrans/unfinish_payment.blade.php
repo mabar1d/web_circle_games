@@ -32,7 +32,7 @@
         <div class="container">
             <!-- logo -->
             <a class="site-logo" href="{{url('/')}}">
-                <img src="{{asset('assets/web_public/img/payment-success-1.jpg')}}" alt="">
+                <img src="{{asset('assets/web_public/img/payment-unfinish-1.jpg')}}" alt="">
             </a>
         </div>
     </header>
