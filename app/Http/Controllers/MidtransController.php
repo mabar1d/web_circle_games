@@ -21,7 +21,6 @@ class MidtransController extends BaseController
         $response->code = '';
         $response->desc = '';
         $requestData = $request->input();
-        dd($requestData);
         return view('public.midtrans.finish_payment', []);
     }
 }
