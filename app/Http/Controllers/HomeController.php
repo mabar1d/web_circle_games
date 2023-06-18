@@ -18,10 +18,11 @@ class HomeController extends BaseController
         $paramsBody = [
             'user_id' => NULL,
             'search' => NULL,
-            'page' => 1
+            'offset' => 0,
+            'limit' => 4
         ];
 
-        $getListNewsApi = ApiCircleGamesHelper::sendRequestApi("POST", "getListNews", $headers, $paramsBody);
+        $getListNewsApi = ApiCircleGamesHelper::sendRequestApi("POST", "getListNewsWeb", $headers, $paramsBody);
         $getListNewsResponse = json_decode($getListNewsApi, true);
         if ($getListNewsResponse['code'] == 00) {
             $listNews = $getListNewsResponse['data'];
