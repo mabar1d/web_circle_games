@@ -77,22 +77,22 @@
                 </div>
             </div>
             <div class="hs-item set-bg" data-setbg="{{asset('assets/web_public/img/slider/slider_2.jpg')}}">
-                <!-- <div class="hs-text">
+                <div class="hs-text">
                     <div class="container">
                         <h2>The Best <span>Games</span> Out There</h2>
                         <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec malesuada <br> lorem maximus mauris scelerisque, at rutrum nulla dictum. Ut ac ligula sapien. <br>Suspendisse cursus faucibus finibus.</p>
                         <a href="#" class="site-btn">Read More</a>
                     </div>
-                </div> -->
+                </div>
             </div>
             <div class="hs-item set-bg" data-setbg="{{asset('assets/web_public/img/slider/slider_3.jpg')}}">
-                <!-- <div class="hs-text">
+                <div class="hs-text">
                     <div class="container">
                         <h2>The Best <span>Games</span> Out There</h2>
                         <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec malesuada <br> lorem maximus mauris scelerisque, at rutrum nulla dictum. Ut ac ligula sapien. <br>Suspendisse cursus faucibus finibus.</p>
                         <a href="#" class="site-btn">Read More</a>
                     </div>
-                </div> -->
+                </div>
             </div>
         </div>
     </section>
@@ -117,46 +117,18 @@
     <section class="feature-section spad">
         <div class="container">
             <div class="row">
+                @foreach ($listNews as $rowNews)
                 <div class="col-lg-3 col-md-6 p-0">
-                    <div class="feature-item set-bg" data-setbg="{{asset('gameWarrior/img/features/1.jpg')}}">
-                        <span class="cata new">new</span>
+                    <div class="feature-item set-bg" data-setbg="{{$rowNews['image']}}">
+                        <span class="cata new">{{$rowNews["news_category_name"]}}</span>
                         <div class="fi-content text-white">
-                            <h5><a href="#">Suspendisse ut justo tem por, rutrum</a></h5>
-                            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. </p>
-                            <a href="#" class="fi-comment">3 Comments</a>
+                            <h5><a href="#">{{$rowNews["title"]}}</a></h5>
+                            <p>{!!substr($rowNews["content"],0,150)!!}.... </p>
+                            <a href="#" class="fi-comment">{{$rowNews['diffCreatedAt']}}</a>
                         </div>
                     </div>
                 </div>
-                <div class="col-lg-3 col-md-6 p-0">
-                    <div class="feature-item set-bg" data-setbg="{{asset('gameWarrior/img/features/2.jpg')}}">
-                        <span class="cata strategy">strategy</span>
-                        <div class="fi-content text-white">
-                            <h5><a href="#">Justo tempor, rutrum erat id, molestie</a></h5>
-                            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. </p>
-                            <a href="#" class="fi-comment">3 Comments</a>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-3 col-md-6 p-0">
-                    <div class="feature-item set-bg" data-setbg="{{asset('gameWarrior/img/features/3.jpg')}}">
-                        <span class="cata new">new</span>
-                        <div class="fi-content text-white">
-                            <h5><a href="#">Nullam lacinia ex eleifend orci porttitor</a></h5>
-                            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. </p>
-                            <a href="#" class="fi-comment">3 Comments</a>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-3 col-md-6 p-0">
-                    <div class="feature-item set-bg" data-setbg="{{asset('gameWarrior/img/features/4.jpg')}}">
-                        <span class="cata racing">racing</span>
-                        <div class="fi-content text-white">
-                            <h5><a href="#">Lacinia ex eleifend orci suscipit</a></h5>
-                            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. </p>
-                            <a href="#" class="fi-comment">3 Comments</a>
-                        </div>
-                    </div>
-                </div>
+                @endforeach
             </div>
         </div>
     </section>
