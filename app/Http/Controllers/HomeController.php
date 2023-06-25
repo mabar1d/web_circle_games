@@ -28,7 +28,7 @@ class HomeController extends BaseController
             $listNews = $getListNewsResponse['data'];
         }
         // dd($listNews);
-        return view('public.layout', [
+        return view('public.home', [
             "listNews" => $listNews
         ]);
     }
