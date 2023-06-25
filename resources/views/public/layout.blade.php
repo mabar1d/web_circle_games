@@ -25,7 +25,7 @@
 	  <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
 	  <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
 	<![endif]-->
-
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9051122177658393" crossorigin="anonymous"></script>
 </head>
 
 <body>
@@ -415,7 +415,6 @@
     <script src="{{asset('gameWarrior/js/owl.carousel.min.js')}}"></script>
     <script src=" {{asset('gameWarrior/js/jquery.marquee.min.js')}}"></script>
     <script src="{{asset('gameWarrior/js/main.js')}}"></script>
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9051122177658393" crossorigin="anonymous"></script>
 </body>
 
 </html>
