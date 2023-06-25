@@ -415,6 +415,7 @@
     <script src="{{asset('gameWarrior/js/owl.carousel.min.js')}}"></script>
     <script src=" {{asset('gameWarrior/js/jquery.marquee.min.js')}}"></script>
     <script src="{{asset('gameWarrior/js/main.js')}}"></script>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9051122177658393" crossorigin="anonymous"></script>
 </body>
 
 </html>
