@@ -6,17 +6,19 @@
     <section class="hero-section">
         <div class="hero-slider owl-carousel">
             @foreach ($listNews as $rowNews)
-                <div class="hs-item set-bg" data-setbg="{{ $rowNews['image'] }}">
-                    <div class="hs-text">
+                <a href="#">
+                    <div class="hs-item set-bg" data-setbg="{{ $rowNews['image'] }}">
+                        {{-- <div class="hs-text">
                         <div class="container">
-                            {{-- <h2>The Best <span>Games</span> Out There</h2>
+                            <h2>The Best <span>Games</span> Out There</h2>
                             <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec malesuada <br> lorem maximus
                                 mauris scelerisque, at rutrum nulla dictum. Ut ac ligula sapien. <br>Suspendisse cursus
-                                faucibus finibus.</p> --}}
+                                faucibus finibus.</p>
                             <a href="#" class="site-btn">Read More</a>
                         </div>
+                    </div> --}}
                     </div>
-                </div>
+                </a>
             @endforeach
         </div>
     </section>
