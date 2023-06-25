@@ -50,7 +50,7 @@
                             <span class="cata new">{{ $rowNews['news_category_name'] }}</span>
                             <div class="fi-content text-white">
                                 <h5><a href="#">{{ $rowNews['title'] }}</a></h5>
-                                <p>{!! substr($rowNews['content'], 0, 150) !!}.... </p>
+                                {{-- <p>{!! substr($rowNews['content'], 0, 50) !!}.... </p> --}}
                                 <a href="#" class="fi-comment">{{ $rowNews['diffCreatedAt'] }}</a>
                             </div>
                         </div>
