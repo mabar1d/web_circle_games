@@ -35,13 +35,14 @@
     <!-- <meta name="twitter:image" content="https://circlegames.id/img/CG.gif"> -->
 
     <!-- Google Font: Source Sans Pro -->
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
     <!-- Font Awesome Icons -->
-    <link rel="stylesheet" href="{{asset('adminlte/plugins/fontawesome-free/css/all.min.css')}}">
-    @yield("plugin_css")
+    <link rel="stylesheet" href="{{ asset('adminlte/plugins/fontawesome-free/css/all.min.css') }}">
+    @yield('plugin_css')
     <!-- Theme style -->
-    <link rel="stylesheet" href="{{asset('adminlte/dist/css/adminlte.min.css')}}">
-    @yield("script_css")
+    <link rel="stylesheet" href="{{ asset('adminlte/dist/css/adminlte.min.css') }}">
+    @yield('script_css')
 </head>
 
 <body class="hold-transition sidebar-mini">
@@ -55,7 +56,8 @@
             <!-- Left navbar links -->
             <ul class="navbar-nav">
                 <li class="nav-item">
-                    <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
+                    <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i
+                            class="fas fa-bars"></i></a>
             </ul>
 
             <!-- Right navbar links -->
@@ -68,7 +70,8 @@
                     <div class="navbar-search-block">
                         <form class="form-inline">
                             <div class="input-group input-group-sm">
-                                <input class="form-control form-control-navbar" type="search" placeholder="Search" aria-label="Search">
+                                <input class="form-control form-control-navbar" type="search" placeholder="Search"
+                                    aria-label="Search">
                                 <div class="input-group-append">
                                     <button class="btn btn-navbar" type="submit">
                                         <i class="fas fa-search"></i>
@@ -116,8 +119,8 @@
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" data-widget="control-sidebar" data-slide="true" href="#" role="button">
-                        <i class="fas fa-th-large"></i>
+                    <a class="nav-link" href="{{ route('logout') }}">
+                        Logout
                     </a>
                 </li>
             </ul>
@@ -148,11 +151,13 @@
             </div>
           </div>
         </div>        
-        */ ?>
+        */
+                ?>
 
                 <!-- Sidebar Menu -->
                 <nav class="mt-2">
-                    <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+                    <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu"
+                        data-accordion="false">
                         <!-- Add icons to the links using the .nav-icon class
                with font-awesome or any other icon font library -->
                         <li class="nav-item">
@@ -165,7 +170,7 @@
                             </a>
                             <ul class="nav nav-treeview">
                                 <li class="nav-item">
-                                    <a href="{{url('master/game')}}" class="nav-link">
+                                    <a href="{{ url('master/game') }}" class="nav-link">
                                         <i class="far fa-newspaper nav-icon"></i>
                                         <p>Game</p>
                                     </a>
@@ -173,7 +178,7 @@
                             </ul>
                             <ul class="nav nav-treeview">
                                 <li class="nav-item">
-                                    <a href="{{url('master.newsCategory')}}" class="nav-link">
+                                    <a href="{{ url('be/master/news_category') }}" class="nav-link">
                                         <i class="far fa-newspaper nav-icon"></i>
                                         <p>News Category</p>
                                     </a>
@@ -189,7 +194,7 @@
                             </ul>
                         </li>
                         <li class="nav-item">
-                            <a href="" class="nav-link">
+                            <a href="{{ url('be/news') }}" class="nav-link">
                                 <i class="nav-icon far fa-newspaper nav-icon"></i>
                                 <p>
                                     News
@@ -205,7 +210,7 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="{{url('tournament')}}" class="nav-link">
+                            <a href="{{ url('tournament') }}" class="nav-link">
                                 <i class="nav-icon far fa-newspaper nav-icon"></i>
                                 <p>
                                     Tournament
@@ -242,7 +247,8 @@
                 Anything you want
             </div>
             <!-- Default to the left -->
-            <strong>Copyright &copy; 2014-2021 <a href="https://adminlte.io">AdminLTE.io</a>.</strong> All rights reserved.
+            <strong>Copyright &copy; 2014-2021 <a href="https://adminlte.io">AdminLTE.io</a>.</strong> All rights
+            reserved.
         </footer>
     </div>
     <!-- ./wrapper -->
@@ -250,12 +256,12 @@
     <!-- REQUIRED SCRIPTS -->
 
     <!-- jQuery -->
-    <script src="{{asset('adminlte/plugins/jquery/jquery.min.js')}}"></script>
+    <script src="{{ asset('adminlte/plugins/jquery/jquery.min.js') }}"></script>
     <!-- Bootstrap 4 -->
-    <script src="{{asset('adminlte/plugins/bootstrap/js/bootstrap.bundle.min.js')}}"></script>
+    <script src="{{ asset('adminlte/plugins/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
     @yield('plugin_js')
     <!-- AdminLTE App -->
-    <script src="{{asset('adminlte/dist/js/adminlte.min.js')}}"></script>
+    <script src="{{ asset('adminlte/dist/js/adminlte.min.js') }}"></script>
     @yield('script_js')
 </body>
 
