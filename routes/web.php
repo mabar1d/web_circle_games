@@ -41,11 +41,16 @@ $router->group(['prefix' => 'callbackMidtrans'], function ($router) {
 
 $router->group(['prefix' => 'be', 'middleware' => 'auth'], function ($router) {
     $router->get('dashboard', [DashboardController::class, 'index']);
-    //NEWS CATEGORY    
+    //NEWS CATEGORY
     $router->get('master/news_category', [NewsCategoryController::class, 'index']);
+    $router->get('master/news_category/getDatatable', [NewsCategoryController::class, 'getDatatable']);
+    $router->get('master/news_category/formModal', [NewsCategoryController::class, 'form_modal']);
+    $router->get('master/news_category/store', [NewsCategoryController::class, 'store']);
+    $router->get('master/news_category/delete', [NewsCategoryController::class, 'delete']);
 
     //NEWS
     $router->get('news', [NewsController::class, 'index']);
+    $router->get('news/getDatatable', [NewsController::class, 'getDatatable']);
 });
 
 $router->group(['prefix' => 'master', 'middleware' => 'auth'], function ($router) {
