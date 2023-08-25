@@ -1,11 +1,11 @@
 @extends('backend.layout')
 
-@section('plugin_css')
+@push('plugin_css')
     <!-- DataTables -->
     <link rel="stylesheet" href="{{ asset('adminlte/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css') }}">
     <link rel="stylesheet" href="{{ asset('adminlte/plugins/datatables-responsive/css/responsive.bootstrap4.min.css') }}">
     <link rel="stylesheet" href="{{ asset('adminlte/plugins/datatables-buttons/css/buttons.bootstrap4.min.css') }}">
-@endsection
+@endpush
 
 @section('content')
     <!-- Content Header (Page header) -->
@@ -27,7 +27,8 @@
                 <div class="col-md-12">
                     <div class="card">
                         <div class="card-body">
-                            <button type="button" class="btn btn-sm btn-success mb-2">Add New</button>
+                            <button type="button" id="btnFormAdd" class="btn btn-sm btn-success mb-2"
+                                data-toggle="modal">Add New</button>
                             <table id="tbl_list" class="table table-striped table-bordered" cellspacing="0" width="100%">
                                 <thead>
                                     <tr>
@@ -49,10 +50,14 @@
         </div>
         <!-- /.row -->
     </div><!-- /.container-fluid -->
+
+    <div class="modal fade" id="modalFormAdd">
+
     </div>
+    <!-- /.modal -->
 @endsection
 
-@section('plugin_js')
+@push('plugin_js')
     <!-- DataTables  & Plugins -->
     <script src="{{ asset('adminlte/plugins/datatables/jquery.dataTables.min.js') }}"></script>
     <script src="{{ asset('adminlte/plugins/datatables-bs4/js/dataTables.bootstrap4.min.js') }}"></script>
@@ -66,9 +71,9 @@
     <script src="{{ asset('adminlte/plugins/datatables-buttons/js/buttons.html5.min.js') }}"></script>
     <script src="{{ asset('adminlte/plugins/datatables-buttons/js/buttons.print.min.js') }}"></script>
     <script src="{{ asset('adminlte/plugins/datatables-buttons/js/buttons.colVis.min.js') }}"></script>
-@endsection
+@endpush
 
-@section('script_js')
+@push('script_js')
     <script type="text/javascript">
         $(document).ready(function() {
             $('#tbl_list').DataTable({
@@ -102,6 +107,26 @@
                     }
                 ]
             });
+
+            $('#btnFormAdd').click(function(e) {
+                e.preventDefault();
+                $.ajax({
+                    type: "POST",
+                    url: "{{ url('be/news/getFormAdd') }}",
+                    data: {
+                        "id": "test"
+                    },
+                    success: function(response) {
+                        $('#modalFormAdd').empty();
+                        $('#modalFormAdd').html(response);
+                        // Display Modal
+                        $('#modalFormAdd').modal('show');
+                    },
+                    error: function(error) {
+                        console.log(error);
+                    }
+                });
+            });
         });
     </script>
-@endsection
+@endpush

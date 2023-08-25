@@ -2,7 +2,8 @@
 <html lang="en">
 
 <head>
-    <title>Circle Game | Dashboard </title>
+    <title>{{ env('APP_NAME') }} | @yield('title') </title>
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <meta name="description" content="description of your website/webpage, make sure you use keywords!">
     <meta property="og:title" content="short title of your website/webpage" />
     <meta property="og:url" content="https://circlegames.id/" />
@@ -39,10 +40,10 @@
         href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
     <!-- Font Awesome Icons -->
     <link rel="stylesheet" href="{{ asset('adminlte/plugins/fontawesome-free/css/all.min.css') }}">
-    @yield('plugin_css')
+    @stack('plugin_css')
     <!-- Theme style -->
     <link rel="stylesheet" href="{{ asset('adminlte/dist/css/adminlte.min.css') }}">
-    @yield('script_css')
+    @stack('script_css')
 </head>
 
 <body class="hold-transition sidebar-mini">
@@ -84,7 +85,6 @@
                         </form>
                     </div>
                 </li>
-
 
                 <!-- Notifications Dropdown Menu -->
                 <li class="nav-item dropdown">
@@ -159,7 +159,8 @@
                     <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu"
                         data-accordion="false">
                         <!-- Add icons to the links using the .nav-icon class with font-awesome or any other icon font library -->
-                        <li class="nav-item">
+                        <li
+                            class="nav-item {{ in_array(session('menu'), ['master_game', 'master_news_category']) ? 'menu-is-opening menu-open' : null }}">
                             <a href="" class="nav-link">
                                 <i class="nav-icon fas fa-edit"></i>
                                 <p>
@@ -169,7 +170,8 @@
                             </a>
                             <ul class="nav nav-treeview">
                                 <li class="nav-item">
-                                    <a href="{{ url('master/game') }}" class="nav-link">
+                                    <a href="{{ url('be/master/game') }}"
+                                        class="nav-link {{ session('menu') == 'master_game' ? 'active' : '' }}">
                                         <i class="far fa-newspaper nav-icon"></i>
                                         <p>Game</p>
                                     </a>
@@ -177,7 +179,8 @@
                             </ul>
                             <ul class="nav nav-treeview">
                                 <li class="nav-item">
-                                    <a href="{{ url('be/master/news_category') }}" class="nav-link">
+                                    <a href="{{ url('be/master/news_category') }}"
+                                        class="nav-link {{ session('menu') == 'master_news_category' ? 'active' : '' }}">
                                         <i class="far fa-newspaper nav-icon"></i>
                                         <p>News Category</p>
                                     </a>
@@ -193,7 +196,8 @@
                             </ul>
                         </li>
                         <li class="nav-item">
-                            <a href="{{ url('be/news') }}" class="nav-link">
+                            <a href="{{ url('be/news') }}"
+                                class="nav-link {{ session('menu') == 'news' ? 'active' : '' }}">
                                 <i class="nav-icon far fa-newspaper nav-icon"></i>
                                 <p>
                                     News
@@ -258,10 +262,19 @@
     <script src="{{ asset('adminlte/plugins/jquery/jquery.min.js') }}"></script>
     <!-- Bootstrap 4 -->
     <script src="{{ asset('adminlte/plugins/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
-    @yield('plugin_js')
+    @stack('plugin_js')
     <!-- AdminLTE App -->
     <script src="{{ asset('adminlte/dist/js/adminlte.min.js') }}"></script>
-    @yield('script_js')
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                }
+            });
+        });
+    </script>
+    @stack('script_js')
 </body>
 
 </html>

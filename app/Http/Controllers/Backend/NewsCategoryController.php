@@ -11,6 +11,7 @@ class NewsCategoryController extends Controller
 {
     public function __construct()
     {
+        session(['menu' => 'master_news_category']);
         $this->middleware('auth');
     }
 
