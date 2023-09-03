@@ -13,14 +13,13 @@ use Yajra\DataTables\Facades\DataTables;
 
 class NewsController extends Controller
 {
-    public function __construct()
+    public function __construct(Request $request)
     {
         $this->middleware('auth');
     }
 
     public function index()
     {
-        session(['menu' => 'news']);
         return view('backend.news.index', []);
     }
 
@@ -102,7 +101,6 @@ class NewsController extends Controller
                 "image" => $image,
                 "status" => $status
             );
-            dd($dataStore);
             $checkDataExist = NewsModel::where("title", $title)->count();
             if ($checkDataExist != 0) {
                 throw new Exception("News Already Exist!");

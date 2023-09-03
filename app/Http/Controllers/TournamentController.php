@@ -3,8 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Helpers\ApiCircleGamesHelper;
+use App\Models\TournamentModel;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller as BaseController;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
 
 class TournamentController extends BaseController
@@ -119,7 +122,7 @@ class TournamentController extends BaseController
         $requestData = $request->input();
         $tournamentID = $requestData["tournament_id"];
         return view(
-            'tournament.tournamentTree',
+            'public.tournamentTree',
             [
                 'tournament_id' => $tournamentID
             ]
@@ -269,5 +272,85 @@ class TournamentController extends BaseController
         // $scoreTournament = array_values($scoreTournament);
         // $data["score"] = $scoreTournament;
         return $responseApi;
+    }
+
+    public function getDropdownData(Request $request)
+    {
+        $response = array(
+            "code" => 1,
+            "message" => ""
+        );
+        DB::beginTransaction();
+        try {
+            $requestData = $request->input();
+            $getData = TournamentModel::select("id", "name");
+            if (isset($requestData["search"]) && $requestData["search"]) {
+                $getData = $getData->where('name', 'like', '%' . $requestData["search"] . '%');
+            }
+            $getData = $getData->get();
+            $response = array(
+                "code" => 0,
+                "message" => "Success Store Data",
+                "data" => $getData->toArray()
+            );
+            DB::commit();
+        } catch (Exception $e) {
+            $response = array(
+                "code" => $e->getCode(),
+                "message" => $e->getMessage()
+            );
+            DB::rollBack();
+        }
+        return json_encode($response);
+    }
+
+    public function getInfo(Request $request)
+    {
+        if (request()->ajax()) {
+            $requestData = $request->input();
+            $headers = [
+                'Content-Type' => 'application/x-www-form-urlencoded'
+            ];
+
+            $paramsBody = [
+                'user_id' => 'web',
+                'tournament_id' => isset($requestData["tournament_id"]) && $requestData["tournament_id"] ? $requestData["tournament_id"] : NULL
+            ];
+            $getApiResponse = ApiCircleGamesHelper::sendRequestApi("POST", "getInfoTournament", $headers, $paramsBody);
+            $result = json_decode($getApiResponse, true);
+            return $result;
+        }
+    }
+
+    public function getFormTournamentMatchRandom(Request $request)
+    {
+        $response = [
+            "code" => 1,
+            "desc" => "Error"
+        ];
+        try {
+            $requestData = $request->input();
+            $headers = [
+                'Content-Type' => 'application/x-www-form-urlencoded'
+            ];
+
+            $paramsBody = [
+                'user_id' => 'web',
+                'tournament_id' => isset($requestData["tournament_id"]) && $requestData["tournament_id"] ? $requestData["tournament_id"] : NULL
+            ];
+            $getApiResponse = ApiCircleGamesHelper::sendRequestApi("POST", "randomMatchTournamentTree", $headers, $paramsBody);
+            $resultApi = json_decode($getApiResponse, true);
+            if ($resultApi["code"] != "00") {
+                throw new Exception($resultApi["desc"], $resultApi["code"]);
+            }
+            return view('backend/tournamentMatch/formTournamentMatchRandom', [
+                "tournamentId" => isset($requestData["tournament_id"]) && $requestData["tournament_id"] ? $requestData["tournament_id"] : NULL,
+                "data" => isset($resultApi["data"]) && $resultApi["data"] ? $resultApi["data"] : NULL
+            ]);
+        } catch (Exception $e) {
+            $response["code"] = $e->getCode();
+            $response["desc"] = $e->getMessage();
+            return $response;
+        }
     }
 }

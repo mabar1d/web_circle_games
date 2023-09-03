@@ -159,8 +159,7 @@
                     <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu"
                         data-accordion="false">
                         <!-- Add icons to the links using the .nav-icon class with font-awesome or any other icon font library -->
-                        <li
-                            class="nav-item {{ in_array(session('menu'), ['master_game', 'master_news_category']) ? 'menu-is-opening menu-open' : null }}">
+                        <li class="nav-item">
                             <a href="" class="nav-link">
                                 <i class="nav-icon fas fa-edit"></i>
                                 <p>
@@ -170,8 +169,7 @@
                             </a>
                             <ul class="nav nav-treeview">
                                 <li class="nav-item">
-                                    <a href="{{ url('be/master/game') }}"
-                                        class="nav-link {{ session('menu') == 'master_game' ? 'active' : '' }}">
+                                    <a href="{{ url('be/master/game') }}" class="nav-link">
                                         <i class="far fa-newspaper nav-icon"></i>
                                         <p>Game</p>
                                     </a>
@@ -179,8 +177,7 @@
                             </ul>
                             <ul class="nav nav-treeview">
                                 <li class="nav-item">
-                                    <a href="{{ url('be/master/news_category') }}"
-                                        class="nav-link {{ session('menu') == 'master_news_category' ? 'active' : '' }}">
+                                    <a href="{{ url('be/master/news_category') }}" class="nav-link">
                                         <i class="far fa-newspaper nav-icon"></i>
                                         <p>News Category</p>
                                     </a>
@@ -196,8 +193,7 @@
                             </ul>
                         </li>
                         <li class="nav-item">
-                            <a href="{{ url('be/news') }}"
-                                class="nav-link {{ session('menu') == 'news' ? 'active' : '' }}">
+                            <a href="{{ url('be/news') }}" class="nav-link">
                                 <i class="nav-icon far fa-newspaper nav-icon"></i>
                                 <p>
                                     News
@@ -213,12 +209,21 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="{{ url('tournament') }}" class="nav-link">
-                                <i class="nav-icon far fa-newspaper nav-icon"></i>
+                            <a href="" class="nav-link">
+                                <i class="nav-icon fas fa-edit"></i>
                                 <p>
                                     Tournament
+                                    <i class="fas fa-angle-left right"></i>
                                 </p>
                             </a>
+                            <ul class="nav nav-treeview">
+                                <li class="nav-item">
+                                    <a href="{{ url('be/tournament/match') }}" class="nav-link">
+                                        <i class="far fa-newspaper nav-icon"></i>
+                                        <p>Tournament Match</p>
+                                    </a>
+                                </li>
+                            </ul>
                         </li>
                     </ul>
                 </nav>

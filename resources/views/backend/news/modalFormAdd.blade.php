@@ -23,8 +23,10 @@
                     </div>
                     <div class="form-group">
                         <label for="inputCategory">Category</label>
-                        <input type="text" name="newsCategory" class="form-control" id="inputCategory"
-                            placeholder="Enter Game Title">
+                        <select class="form-control select2" style="width: 100%;" name="newsCategory"
+                            id="inputCategory">
+                            <option value="">Select a Category</option>
+                        </select>
                     </div>
                     <div class="form-group">
                         <label for="inputTitle">Title</label>
@@ -37,8 +39,9 @@
                     </div>
                     <div class="form-group">
                         <label for="inputTags">Tags</label>
-                        <input type="text" name="newsTags" class="form-control" id="inputTags"
-                            placeholder="Enter Game Title">
+                        <select class="form-control select2" style="width: 100%;" name="newsTags[]" id="inputTags"
+                            data-tags="true" data-placeholder="TAGS" multiple="multiple">
+                        </select>
                     </div>
                     <div class="form-check">
                         <input type="checkbox" class="form-check-input" id="inputStatus" name="newsStatus"
@@ -60,6 +63,72 @@
 
 <script type="text/javascript">
     $(document).ready(function() {
+        //Initialize Select2 Elements
+        $('#inputCategory').select2({
+            ajax: {
+                url: "{{ url('be/master/news_category/getDropdown') }}",
+                dataType: 'json',
+                // placeholder: "Select a Category",
+                // allowClear: true,
+                data: function(params) {
+                    var query = {
+                        search: params.term,
+                        type: 'public'
+                    }
+                    return query;
+                },
+                processResults: function(response) {
+                    if (response.code == 0) {
+                        var results = [];
+                        $.each(response.data, function(index, data) {
+                            results.push({
+                                id: data.id,
+                                text: data.name
+                            });
+                        });
+                        return {
+                            "results": results
+                        };
+                    } else {
+                        alert(response.message);
+                    }
+                }
+            }
+        });
+
+        $('#inputTags').select2({
+            tags: true,
+            tokenSeparators: [","],
+            multiple: true,
+            ajax: {
+                url: "{{ url('be/master/news_category/getDropdown') }}",
+                dataType: "json",
+                data: function(params) {
+                    var query = {
+                        search: params.term,
+                        type: 'public'
+                    }
+                    return query;
+                },
+                processResults: function(response) {
+                    if (response.code == 0) {
+                        var results = [];
+                        $.each(response.data, function(index, data) {
+                            results.push({
+                                id: data.id,
+                                text: data.name
+                            });
+                        });
+                        return {
+                            "results": results
+                        };
+                    } else {
+                        alert(response.message);
+                    }
+                }
+            }
+        });
+
         $("#formModalAdd").submit(function(e) {
             e.preventDefault();
             var form = $("#formModalAdd");
@@ -71,10 +140,10 @@
                 encode: true,
                 success: function(response) {
                     alert(response.message);
-                    if (response.code == 0) {
-                        // Hide Modal
-                        $('#modalFormAdd').modal('hide');
-                    }
+                    // if (response.code == 0) {
+                    //     // Hide Modal
+                    //     $('#modalFormAdd').modal('hide');
+                    // }
                 },
                 error: function(error) {
                     alert(error.message);

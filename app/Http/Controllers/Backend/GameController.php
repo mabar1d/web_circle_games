@@ -13,7 +13,6 @@ class GameController extends Controller
 {
     public function __construct()
     {
-        session(['menu' => 'master_game']);
         $this->middleware('auth');
     }
 

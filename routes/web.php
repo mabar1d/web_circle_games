@@ -7,6 +7,7 @@ use App\Http\Controllers\Backend\DashboardController;
 use App\Http\Controllers\Backend\GameController;
 use App\Http\Controllers\Backend\NewsCategoryController;
 use App\Http\Controllers\Backend\NewsController;
+use App\Http\Controllers\Backend\TournamentMatchController;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Route;
 
@@ -48,6 +49,7 @@ $router->group(['prefix' => 'be', 'middleware' => 'auth'], function ($router) {
     $router->get('master/news_category/formModal', [NewsCategoryController::class, 'form_modal']);
     $router->get('master/news_category/store', [NewsCategoryController::class, 'store']);
     $router->get('master/news_category/delete', [NewsCategoryController::class, 'delete']);
+    $router->get('master/news_category/getDropdown', [NewsCategoryController::class, 'getDropdownData']);
 
     //MASTER GAME
     $router->get('master/game', [GameController::class, 'index']);
@@ -62,6 +64,23 @@ $router->group(['prefix' => 'be', 'middleware' => 'auth'], function ($router) {
     $router->post('news/getFormAdd', [NewsController::class, 'getFormAdd']);
     $router->post('news/store', [NewsController::class, 'store']);
     $router->post('news/delete', [NewsController::class, 'delete']);
+
+    //TOURNAMENT
+    $router->get('tournament', [TournamentController::class, 'index']);
+    $router->get('tournament/getDatatable', [TournamentController::class, 'getDatatable']);
+    $router->post('tournament/getFormAdd', [TournamentController::class, 'getFormAdd']);
+    $router->post('tournament/store', [TournamentController::class, 'store']);
+    $router->post('tournament/delete', [TournamentController::class, 'delete']);
+    $router->get('tournament/getDropdown', [TournamentController::class, 'getDropdownData']);
+    $router->post('tournament/getInfo', [TournamentController::class, 'getInfo']);
+    $router->post('tournament/rollRandomMatch', [TournamentController::class, 'getFormTournamentMatchRandom']);
+
+    //TOURNAMENT MATCH
+    $router->get('tournament/match', [TournamentMatchController::class, 'index']);
+    $router->get('tournament/match/getDatatable', [TournamentMatchController::class, 'getDatatable']);
+    $router->post('tournament/match/getFormAdd', [TournamentMatchController::class, 'getFormAdd']);
+    $router->post('tournament/match/store', [TournamentMatchController::class, 'store']);
+    $router->post('tournament/match/delete', [TournamentMatchController::class, 'delete']);
 });
 
 $router->group(['prefix' => 'master', 'middleware' => 'auth'], function ($router) {
