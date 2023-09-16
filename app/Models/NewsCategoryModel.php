@@ -6,6 +6,8 @@ use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Crypt;
 
 class NewsCategoryModel extends Model
 {
@@ -25,15 +27,20 @@ class NewsCategoryModel extends Model
     {
         parent::boot();
 
-        // //create event to happen on creating
-        // self::creating(function ($model) {
-        //     $model->created_by = Auth::id();
-        // });
+        //create event to happen on creating
+        self::creating(function ($model) {
+            $model->created_by = Auth::id();
+        });
 
-        // //create event to happen on creating
-        // self::updated(function ($model) {
-        //     $model->updated_by = Auth::id();
-        // });
+        //create event to happen on creating
+        self::updated(function ($model) {
+            $model->updated_by = Auth::id();
+        });
+    }
+
+    public function getIdAttribute() //to show id column
+    {
+        return Crypt::encryptString($this->attributes['id']);
     }
 
     public function getCreatedAtAttribute() //to show created_at column

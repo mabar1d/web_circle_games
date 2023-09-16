@@ -33,7 +33,7 @@ class GameModel extends Model
         //create event to happen on creating
         self::creating(function ($model) {
             $model->created_by = Auth::id();
-            $model->m_game_uid = Str::orderedUuid()->getHex()->toString();
+            // $model->m_game_uid = Str::orderedUuid()->getHex()->toString();
         });
 
         //create event to happen on creating

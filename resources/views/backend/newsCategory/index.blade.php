@@ -27,7 +27,8 @@
                 <div class="col-md-12">
                     <div class="card">
                         <div class="card-body">
-                            <a href="#" class="btn btn-sm btn-success mb-2">Add New</a>
+                            <button type="button" id="btnFormAdd" class="btn btn-sm btn-success mb-2"
+                                data-toggle="modal">Add New</button>
                             <table id="tbl_list" class="table table-striped table-bordered" cellspacing="0" width="100%">
                                 <thead>
                                     <tr>
@@ -48,7 +49,10 @@
         </div>
         <!-- /.row -->
     </div><!-- /.container-fluid -->
+    <div class="modal fade" id="modalFormAdd">
+
     </div>
+    <!-- /.modal -->
 @endsection
 
 @push('plugin_js')
@@ -99,7 +103,70 @@
                         orderable: false,
                         searchable: false
                     }
-                ]
+                ],
+                drawCallback: function(settings) {
+                    $(".btnView").click(function() {
+                        let id = $(this).data('id');
+                        let urlBtnView = "{{ url('be/master/news_category/getFormAdd') }}";
+                        $.ajax({
+                            url: urlBtnView,
+                            type: "POST",
+                            data: {
+                                "id": id
+                            },
+                            success: function(response) {
+                                $('#modalFormAdd').empty();
+                                $('#modalFormAdd').html(response);
+                                // Display Modal
+                                $('#modalFormAdd').modal('show');
+                            },
+                            error: function(error) {
+                                alert(error);
+                            }
+                        })
+                    });
+
+                    $(".btnDelete").click(function() {
+                        if (confirm('Are You Sure?')) {
+                            let id = $(this).data('id');
+                            let urlBtnDelete = "{{ url('be/master/news_category/delete') }}";
+                            $.ajax({
+                                url: urlBtnDelete,
+                                type: "POST",
+                                dataType: "json",
+                                data: {
+                                    "id": id
+                                },
+                                success: function(response) {
+                                    alert(response.message);
+                                    if (response.code == 0) {
+                                        $('#tbl_list').DataTable().ajax.reload();
+                                    }
+                                },
+                                error: function(error) {
+                                    alert(error);
+                                }
+                            })
+                        }
+                    });
+                }
+            });
+
+            $('#btnFormAdd').click(function(e) {
+                e.preventDefault();
+                $.ajax({
+                    type: "POST",
+                    url: "{{ url('be/master/news_category/getFormAdd') }}",
+                    success: function(response) {
+                        $('#modalFormAdd').empty();
+                        $('#modalFormAdd').html(response);
+                        // Display Modal
+                        $('#modalFormAdd').modal('show');
+                    },
+                    error: function(error) {
+                        console.log(error);
+                    }
+                });
             });
         });
     </script>

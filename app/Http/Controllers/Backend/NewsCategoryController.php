@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers\Backend;
 
-use App\Helpers\ApiCircleGamesHelper;
 use App\Http\Controllers\Controller;
 use App\Models\NewsCategoryModel;
 use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\DB;
 use Yajra\DataTables\Facades\DataTables;
 
@@ -26,21 +26,7 @@ class NewsCategoryController extends Controller
     {
         if (request()->ajax()) {
             $requestData = $request->input();
-            $headers = [
-                'Content-Type' => 'application/x-www-form-urlencoded'
-            ];
-
-            $paramsBody = [
-                'user_id' => 'web',
-                'search' => NULL,
-                'page' => 1
-            ];
-
-            $getListNewsCategoryApi = ApiCircleGamesHelper::sendRequestApi("POST", "getListNewsCategory", $headers, $paramsBody);
-            $getListNewsCategoryResponse = json_decode($getListNewsCategoryApi, true);
-            if ($getListNewsCategoryResponse['code'] == 00) {
-                $listNewsCategory = $getListNewsCategoryResponse['data'];
-            }
+            $listNewsCategory = NewsCategoryModel::get();
             return Datatables::of($listNewsCategory)
                 ->addIndexColumn()
                 ->editColumn('status', function ($row) {
@@ -49,13 +35,113 @@ class NewsCategoryController extends Controller
                 })
                 ->addColumn('action', function ($row) {
                     $result = "";
-                    $result .= '<button type="button" class="btn btn-warning btn-xs m-1">View</button>';
-                    $result .= '<button type="button" class="btn btn-danger btn-xs m-1">Delete</button>';
+                    $result .= '<button type="button" class="btn btn-warning btn-xs m-1 btnView" data-id="' . $row['id'] . '">View</button>';
+                    $result .= '<button type="button" class="btn btn-danger btn-xs m-1 btnDelete" data-id="' . $row['id'] . '">Delete</button>';
                     return $result;
                 })
                 ->rawColumns(['status', 'action'])
                 ->make();
         }
+    }
+
+    public function getFormAdd(Request $request)
+    {
+        try {
+            if (request()->ajax()) {
+                $requestData = $request->input();
+                $newsCategoryId = isset($requestData["id"]) && $requestData["id"] ? Crypt::decryptString($requestData["id"]) : null;
+                $isDisabled = false;
+                $data = NULL;
+                if ($newsCategoryId) {
+                    $isDisabled = true;
+                    $data = NewsCategoryModel::findOrFail($newsCategoryId);
+                }
+                $throwData = [
+                    "data" => $data,
+                    "isDisabled" => $isDisabled
+                ];
+                return view('backend/newsCategory/modalFormAdd', $throwData);
+            }
+        } catch (Exception $e) {
+            return $e->getMessage();
+        }
+    }
+
+    public function store(Request $request)
+    {
+        $response = array(
+            "code" => 1,
+            "message" => ""
+        );
+        DB::beginTransaction();
+        try {
+            $requestData = $request->input();
+            if (!isset($requestData["newsCategoryTitle"]) || !$requestData["newsCategoryTitle"]) {
+                throw new Exception("Title News Category is Empty!", 1);
+            }
+            $newsCategoryId = isset($requestData["newsCategoryId"]) && $requestData["newsCategoryId"] ? Crypt::decryptString($requestData["newsCategoryId"]) : NULL;
+            $title = isset($requestData["newsCategoryTitle"]) && $requestData["newsCategoryTitle"] ? trim(strtolower($requestData["newsCategoryTitle"])) : NULL;
+            $desc = isset($requestData["newsCategoryDesc"]) && $requestData["newsCategoryDesc"] ? trim($requestData["newsCategoryDesc"]) : NULL;
+            $status = isset($requestData["newsCategoryStatus"]) && $requestData["newsCategoryStatus"] ? $requestData["newsCategoryStatus"] : 0;
+            $dataStore = array(
+                "name" => $title,
+                "desc" => $desc,
+                "status" => $status
+            );
+            if (!$newsCategoryId) {
+                $checkDataExist = NewsCategoryModel::where("name", $title)->count();
+                if ($checkDataExist != 0) {
+                    throw new Exception("News Category Already Exist!");
+                }
+            }
+            NewsCategoryModel::updateOrCreate(
+                [
+                    "id" => $newsCategoryId
+                ],
+                $dataStore
+            );
+            $response = array(
+                "code" => 0,
+                "message" => "Success Store Data"
+            );
+            DB::commit();
+        } catch (Exception $e) {
+            $response = array(
+                "code" => $e->getCode(),
+                "message" => $e->getMessage()
+            );
+            DB::rollBack();
+        }
+        return json_encode($response);
+    }
+
+    public function delete(Request $request)
+    {
+        $response = array(
+            "code" => 1,
+            "message" => ""
+        );
+        DB::beginTransaction();
+        try {
+            $requestData = $request->input();
+            $newsCategoryId = isset($requestData["id"]) && $requestData["id"] ? Crypt::decryptString($requestData["id"]) : NULL;
+            if (!$newsCategoryId) {
+                throw new Exception("News Category Id is Empty!", 1);
+            }
+            NewsCategoryModel::findOrFail($newsCategoryId)->delete();
+            $response = array(
+                "code" => 0,
+                "message" => "Success Delete Data"
+            );
+            DB::commit();
+        } catch (Exception $e) {
+            $response = array(
+                "code" => $e->getCode(),
+                "message" => $e->getMessage()
+            );
+            DB::rollBack();
+        }
+        return json_encode($response);
     }
 
     public function getDropdownData(Request $request)

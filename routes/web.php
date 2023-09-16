@@ -55,9 +55,9 @@ $router->group(['prefix' => 'be', 'middleware' => 'auth'], function ($router) {
     //NEWS CATEGORY
     $router->get('master/news_category', [NewsCategoryController::class, 'index']);
     $router->get('master/news_category/getDatatable', [NewsCategoryController::class, 'getDatatable']);
-    $router->get('master/news_category/formModal', [NewsCategoryController::class, 'form_modal']);
-    $router->get('master/news_category/store', [NewsCategoryController::class, 'store']);
-    $router->get('master/news_category/delete', [NewsCategoryController::class, 'delete']);
+    $router->post('master/news_category/getFormAdd', [NewsCategoryController::class, 'getFormAdd']);
+    $router->post('master/news_category/store', [NewsCategoryController::class, 'store']);
+    $router->post('master/news_category/delete', [NewsCategoryController::class, 'delete']);
     $router->get('master/news_category/getDropdown', [NewsCategoryController::class, 'getDropdownData']);
 
     //APK MENU
