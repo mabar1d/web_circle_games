@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Auth;
 class TournamentModel extends Model
 {
     use HasFactory;
-    // use SoftDeletes;
+    use SoftDeletes;
 
     protected $table = 'm_tournament';
     protected $primaryKey = 'id';
@@ -31,7 +31,7 @@ class TournamentModel extends Model
         'image',
         'terms_condition'
     ];
-    protected $hidden = array('created_at', 'updated_at');
+    protected $dates = ['deleted_at'];
 
     protected static function boot()
     {

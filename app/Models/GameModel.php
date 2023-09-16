@@ -25,6 +25,7 @@ class GameModel extends Model
         'created_by',
         'updated_by'
     ];
+    protected $dates = ['deleted_at'];
 
     protected static function boot()
     {

@@ -87,8 +87,8 @@ class NewsController extends Controller
             if (!isset($requestData["newsCategory"]) || !$requestData["newsCategory"]) {
                 throw new Exception("Category News is Empty!", 1);
             }
-            $newsCategory = isset($requestData["newsCategory"]) && $requestData["newsCategory"] ? trim(strtolower($requestData["newsCategory"])) : NULL;
-            $title = isset($requestData["newsTitle"]) && $requestData["newsTitle"] ? trim(strtolower($requestData["newsTitle"])) : NULL;
+            $newsCategory = isset($requestData["newsCategory"]) && $requestData["newsCategory"] ? trim($requestData["newsCategory"]) : NULL;
+            $title = isset($requestData["newsTitle"]) && $requestData["newsTitle"] ? trim($requestData["newsTitle"]) : NULL;
             $content = isset($requestData["newsContent"]) && $requestData["newsContent"] ? trim($requestData["newsContent"]) : NULL;
             $image = isset($requestData["newsImage"]) && $requestData["newsImage"] ? trim($requestData["newsImage"]) : NULL;
             $status = isset($requestData["newsStatus"]) && $requestData["newsStatus"] ? $requestData["newsStatus"] : 0;
@@ -103,7 +103,7 @@ class NewsController extends Controller
             );
             $checkDataExist = NewsModel::where("title", $title)->count();
             if ($checkDataExist != 0) {
-                throw new Exception("News Already Exist!");
+                throw new Exception("News Already Exist!", 1);
             }
             NewsModel::create($dataStore);
             $response = array(

@@ -2,19 +2,20 @@
 
 namespace App\Http\Controllers\Backend;
 
-use App\Helpers\ApiCircleGamesHelper;
+use App\Helpers\ApiCircleapkMenusHelper;
 use App\Http\Controllers\Controller;
 use App\Models\ApkMenuModel;
 use App\Models\NewsModel;
 use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\DB;
 use Yajra\DataTables\Facades\DataTables;
 
 class ApkMenuController extends Controller
 {
-    public function __construct(Request $request)
+    public function __construct()
     {
         $this->middleware('auth');
     }
@@ -28,17 +29,22 @@ class ApkMenuController extends Controller
     {
         if (request()->ajax()) {
             $requestData = $request->input();
-            $listApkMenu = ApkMenuModel::get();
-            return DataTables::of($listApkMenu)
+            $listData = ApkMenuModel::select(
+                'id',
+                'title',
+                'order',
+                'status'
+            );
+            return Datatables::of($listData)
                 ->addIndexColumn()
                 ->editColumn('status', function ($row) {
-                    $result = isset($row['status']) && $row['status'] ? '<span class="badge bg-success">Active</span>' : '<span class="badge bg-success">Active</span>';
+                    $result = isset($row['status']) && $row['status'] ? '<span class="badge bg-success">Active</span>' : '<span class="badge bg-danger">Inactive</span>';
                     return $result;
                 })
                 ->addColumn('action', function ($row) {
                     $result = "";
-                    $result .= '<button type="button" class="btn btn-warning btn-xs m-1">View</button>';
-                    $result .= '<button type="button" class="btn btn-danger btn-xs m-1">Delete</button>';
+                    $result .= '<button type="button" class="btn btn-warning btn-xs m-1 btnView" data-id="' . $row['id'] . '">View</button>';
+                    $result .= '<button type="button" class="btn btn-danger btn-xs m-1 btnDelete" data-id="' . $row['id'] . '">Delete</button>';
                     return $result;
                 })
                 ->rawColumns(['status', 'action'])
@@ -51,7 +57,18 @@ class ApkMenuController extends Controller
         try {
             if (request()->ajax()) {
                 $requestData = $request->input();
-                return view('backend/news/modalFormAdd');
+                $apkMenuId = isset($requestData["id"]) && $requestData["id"] ? Crypt::decryptString($requestData["id"]) : null;
+                $isDisabled = false;
+                $data = NULL;
+                if ($apkMenuId) {
+                    $isDisabled = true;
+                    $data = ApkMenuModel::findOrFail($apkMenuId);
+                }
+                $throwData = [
+                    "data" => $data,
+                    "isDisabled" => $isDisabled
+                ];
+                return view('backend/apkMenu/modalFormAdd', $throwData);
             }
         } catch (Exception $e) {
             return $e->getMessage();
@@ -67,34 +84,62 @@ class ApkMenuController extends Controller
         DB::beginTransaction();
         try {
             $requestData = $request->input();
-            if (!isset($requestData["newsTitle"]) || !$requestData["newsTitle"]) {
-                throw new Exception("News Title is Empty!", 1);
+            if (!isset($requestData["apkMenuTitle"]) || !$requestData["apkMenuTitle"]) {
+                throw new Exception("Title APK Menu is Empty!", 1);
             }
-            if (!isset($requestData["newsCategory"]) || !$requestData["newsCategory"]) {
-                throw new Exception("Category News is Empty!", 1);
-            }
-            $newsCategory = isset($requestData["newsCategory"]) && $requestData["newsCategory"] ? trim(strtolower($requestData["newsCategory"])) : NULL;
-            $title = isset($requestData["newsTitle"]) && $requestData["newsTitle"] ? trim(strtolower($requestData["newsTitle"])) : NULL;
-            $content = isset($requestData["newsContent"]) && $requestData["newsContent"] ? trim($requestData["newsContent"]) : NULL;
-            $image = isset($requestData["newsImage"]) && $requestData["newsImage"] ? trim($requestData["newsImage"]) : NULL;
-            $status = isset($requestData["newsStatus"]) && $requestData["newsStatus"] ? $requestData["newsStatus"] : 0;
-            $tags = isset($requestData["newsTags"]) && $requestData["newsTags"] ? $requestData["newsTags"] : 0;
+            $apkMenuId = isset($requestData["apkMenuId"]) && $requestData["apkMenuId"] ? Crypt::decryptString($requestData["apkMenuId"]) : NULL;
+            $title = isset($requestData["apkMenuTitle"]) && $requestData["apkMenuTitle"] ? trim($requestData["apkMenuTitle"]) : NULL;
+            $order = isset($requestData["apkMenuOrder"]) && $requestData["apkMenuOrder"] ? trim($requestData["apkMenuOrder"]) : NULL;
+            $status = isset($requestData["apkMenuStatus"]) && $requestData["apkMenuStatus"] ? $requestData["apkMenuStatus"] : 0;
             $dataStore = array(
-                "news_category_id" => $newsCategory,
                 "title" => $title,
-                "slug" => Str::slug($title),
-                "content" => $content,
-                "image" => $image,
+                "order" => $order,
                 "status" => $status
             );
-            $checkDataExist = NewsModel::where("title", $title)->count();
-            if ($checkDataExist != 0) {
-                throw new Exception("News Already Exist!");
+            if (!$apkMenuId) {
+                $checkDataExist = ApkMenuModel::where("title", $title)->count();
+                if ($checkDataExist != 0) {
+                    throw new Exception("APK Menu Already Exist!", 1);
+                }
             }
-            NewsModel::create($dataStore);
+            ApkMenuModel::updateOrCreate(
+                [
+                    "id" => $apkMenuId
+                ],
+                $dataStore
+            );
             $response = array(
                 "code" => 0,
                 "message" => "Success Store Data"
+            );
+            DB::commit();
+        } catch (Exception $e) {
+            $response = array(
+                "code" => $e->getCode(),
+                "message" => $e->getMessage()
+            );
+            DB::rollBack();
+        }
+        return json_encode($response);
+    }
+
+    public function delete(Request $request)
+    {
+        $response = array(
+            "code" => 1,
+            "message" => ""
+        );
+        DB::beginTransaction();
+        try {
+            $requestData = $request->input();
+            $apkMenuId = isset($requestData["id"]) && $requestData["id"] ? Crypt::decryptString($requestData["id"]) : NULL;
+            if (!$apkMenuId) {
+                throw new Exception("apkMenu Id is Empty!", 1);
+            }
+            ApkMenuModel::findOrFail($apkMenuId)->delete();
+            $response = array(
+                "code" => 0,
+                "message" => "Success Delete Data"
             );
             DB::commit();
         } catch (Exception $e) {

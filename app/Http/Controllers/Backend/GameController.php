@@ -86,7 +86,7 @@ class GameController extends Controller
                 throw new Exception("Title Game is Empty!", 1);
             }
             $gameId = isset($requestData["gameId"]) && $requestData["gameId"] ? Crypt::decryptString($requestData["gameId"]) : NULL;
-            $title = isset($requestData["gameTitle"]) && $requestData["gameTitle"] ? trim(strtolower($requestData["gameTitle"])) : NULL;
+            $title = isset($requestData["gameTitle"]) && $requestData["gameTitle"] ? trim($requestData["gameTitle"]) : NULL;
             $desc = isset($requestData["gameDesc"]) && $requestData["gameDesc"] ? trim($requestData["gameDesc"]) : NULL;
             $image = isset($requestData["gameImage"]) && $requestData["gameImage"] ? trim($requestData["gameImage"]) : NULL;
             $status = isset($requestData["gameStatus"]) && $requestData["gameStatus"] ? $requestData["gameStatus"] : 0;
@@ -99,7 +99,7 @@ class GameController extends Controller
             if (!$gameId) {
                 $checkDataExist = GameModel::where("title", $title)->count();
                 if ($checkDataExist != 0) {
-                    throw new Exception("Game Already Exist!");
+                    throw new Exception("Game Already Exist!", 1);
                 }
             }
             GameModel::updateOrCreate(

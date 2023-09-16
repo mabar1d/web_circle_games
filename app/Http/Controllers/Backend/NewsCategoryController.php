@@ -26,7 +26,12 @@ class NewsCategoryController extends Controller
     {
         if (request()->ajax()) {
             $requestData = $request->input();
-            $listNewsCategory = NewsCategoryModel::get();
+            $listNewsCategory = NewsCategoryModel::select(
+                'id',
+                'name',
+                'desc',
+                'status'
+            );
             return Datatables::of($listNewsCategory)
                 ->addIndexColumn()
                 ->editColumn('status', function ($row) {
@@ -80,7 +85,7 @@ class NewsCategoryController extends Controller
                 throw new Exception("Title News Category is Empty!", 1);
             }
             $newsCategoryId = isset($requestData["newsCategoryId"]) && $requestData["newsCategoryId"] ? Crypt::decryptString($requestData["newsCategoryId"]) : NULL;
-            $title = isset($requestData["newsCategoryTitle"]) && $requestData["newsCategoryTitle"] ? trim(strtolower($requestData["newsCategoryTitle"])) : NULL;
+            $title = isset($requestData["newsCategoryTitle"]) && $requestData["newsCategoryTitle"] ? trim($requestData["newsCategoryTitle"]) : NULL;
             $desc = isset($requestData["newsCategoryDesc"]) && $requestData["newsCategoryDesc"] ? trim($requestData["newsCategoryDesc"]) : NULL;
             $status = isset($requestData["newsCategoryStatus"]) && $requestData["newsCategoryStatus"] ? $requestData["newsCategoryStatus"] : 0;
             $dataStore = array(
@@ -91,7 +96,7 @@ class NewsCategoryController extends Controller
             if (!$newsCategoryId) {
                 $checkDataExist = NewsCategoryModel::where("name", $title)->count();
                 if ($checkDataExist != 0) {
-                    throw new Exception("News Category Already Exist!");
+                    throw new Exception("News Category Already Exist!", 1);
                 }
             }
             NewsCategoryModel::updateOrCreate(

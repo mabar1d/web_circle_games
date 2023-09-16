@@ -22,6 +22,7 @@ class NewsCategoryModel extends Model
         'desc',
         'status'
     ];
+    protected $dates = ['deleted_at'];
 
     protected static function boot()
     {

@@ -63,10 +63,9 @@ $router->group(['prefix' => 'be', 'middleware' => 'auth'], function ($router) {
     //APK MENU
     $router->get('master/apk_menu', [ApkMenuController::class, 'index']);
     $router->get('master/apk_menu/getDatatable', [ApkMenuController::class, 'getDatatable']);
-    $router->get('master/apk_menu/formModal', [ApkMenuController::class, 'form_modal']);
-    $router->get('master/apk_menu/store', [ApkMenuController::class, 'store']);
-    $router->get('master/apk_menu/delete', [ApkMenuController::class, 'delete']);
-    $router->get('master/apk_menu/getDropdown', [ApkMenuController::class, 'getDropdownData']);
+    $router->post('master/apk_menu/getFormAdd', [ApkMenuController::class, 'getFormAdd']);
+    $router->post('master/apk_menu/store', [ApkMenuController::class, 'store']);
+    $router->post('master/apk_menu/delete', [ApkMenuController::class, 'delete']);
 
     //NEWS
     $router->get('news', [NewsController::class, 'index']);
