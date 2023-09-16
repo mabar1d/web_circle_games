@@ -6,7 +6,6 @@ use App\Http\Controllers\Controller;
 use App\Models\NewsCategoryModel;
 use Exception;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\DB;
 use Yajra\DataTables\Facades\DataTables;
 
@@ -54,7 +53,7 @@ class NewsCategoryController extends Controller
         try {
             if (request()->ajax()) {
                 $requestData = $request->input();
-                $newsCategoryId = isset($requestData["id"]) && $requestData["id"] ? Crypt::decryptString($requestData["id"]) : null;
+                $newsCategoryId = isset($requestData["id"]) && $requestData["id"] ? $requestData["id"] : null;
                 $isDisabled = false;
                 $data = NULL;
                 if ($newsCategoryId) {
@@ -84,7 +83,7 @@ class NewsCategoryController extends Controller
             if (!isset($requestData["newsCategoryTitle"]) || !$requestData["newsCategoryTitle"]) {
                 throw new Exception("Title News Category is Empty!", 1);
             }
-            $newsCategoryId = isset($requestData["newsCategoryId"]) && $requestData["newsCategoryId"] ? Crypt::decryptString($requestData["newsCategoryId"]) : NULL;
+            $newsCategoryId = isset($requestData["newsCategoryId"]) && $requestData["newsCategoryId"] ? $requestData["newsCategoryId"] : NULL;
             $title = isset($requestData["newsCategoryTitle"]) && $requestData["newsCategoryTitle"] ? trim($requestData["newsCategoryTitle"]) : NULL;
             $desc = isset($requestData["newsCategoryDesc"]) && $requestData["newsCategoryDesc"] ? trim($requestData["newsCategoryDesc"]) : NULL;
             $status = isset($requestData["newsCategoryStatus"]) && $requestData["newsCategoryStatus"] ? $requestData["newsCategoryStatus"] : 0;
@@ -129,7 +128,7 @@ class NewsCategoryController extends Controller
         DB::beginTransaction();
         try {
             $requestData = $request->input();
-            $newsCategoryId = isset($requestData["id"]) && $requestData["id"] ? Crypt::decryptString($requestData["id"]) : NULL;
+            $newsCategoryId = isset($requestData["id"]) && $requestData["id"] ? $requestData["id"] : NULL;
             if (!$newsCategoryId) {
                 throw new Exception("News Category Id is Empty!", 1);
             }

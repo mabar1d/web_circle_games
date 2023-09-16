@@ -6,6 +6,7 @@ use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\Auth;
 
 class NewsModel extends Model
 {
@@ -30,15 +31,15 @@ class NewsModel extends Model
     {
         parent::boot();
 
-        // //create event to happen on creating
-        // self::creating(function ($model) {
-        //     $model->created_by = Auth::id();
-        // });
+        //create event to happen on creating
+        self::creating(function ($model) {
+            $model->created_by = Auth::id();
+        });
 
-        // //create event to happen on creating
-        // self::updated(function ($model) {
-        //     $model->updated_by = Auth::id();
-        // });
+        //create event to happen on creating
+        self::updated(function ($model) {
+            $model->updated_by = Auth::id();
+        });
     }
 
     public function getCreatedAtAttribute() //to show created_at column
@@ -52,143 +53,33 @@ class NewsModel extends Model
             ->format('d M Y H:i');
     }
 
-    public static function countNews($filter = NULL)
+    public function newsCategory()
     {
-        $result = 0;
-        $query = NewsModel::select("id");
-        if (isset($filter["id"]) && $filter["id"]) {
-            $query = $query->where("id", $filter["id"]);
-        }
-        if (isset($filter["title"]) && $filter["title"]) {
-            $query = $query->where("title", $filter["title"]);
-        }
-        if (isset($filter["slug"]) && $filter["slug"]) {
-            $query = $query->where("slug", $filter["slug"]);
-        }
-        if (isset($filter["status"]) && $filter["status"]) {
-            $query = $query->where("status", $filter["status"]);
-        }
-        $result = $query->count();
-        return $result;
+        return $this->hasOne(NewsCategoryModel::class, 'id', 'news_category_id');
     }
 
-    public static function getNews($filter = NULL)
+    public function newsTags()
     {
-        $result = array();
-        $query = NewsModel::select("*");
-        if (isset($filter["id"]) && $filter["id"]) {
-            $query = $query->where("id", $filter["id"]);
-        }
-        if (isset($filter["title"]) && $filter["title"]) {
-            $query = $query->where("title", $filter["title"]);
-        }
-        if (isset($filter["slug"]) && $filter["slug"]) {
-            $query = $query->where("slug", $filter["slug"]);
-        }
-        if (isset($filter["status"]) && $filter["status"]) {
-            $query = $query->where("status", $filter["status"]);
-        }
-        if (isset($filter["search"]) && $filter["search"]) {
-            $query = $query->where("title", 'like', $filter["search"] . '%');
-        }
-        $query = $query->first();
-        if ($query) {
-            $result = $query->toArray();
-        }
-        return $result;
+        return $this->hasMany(NewsTagsModel::class, 'news_id', 'id');
     }
 
-    public static function getListNews($filter = NULL)
-    {
-        $result = array();
-        $query = NewsModel::select("*");
-        if (isset($filter["id"]) && $filter["id"]) {
-            $query = $query->where("id", $filter["id"]);
-        }
-        if (isset($filter["title"]) && $filter["title"]) {
-            $query = $query->where("title", $filter["title"]);
-        }
-        if (isset($filter["status"]) && $filter["status"]) {
-            $query = $query->where("status", $filter["status"]);
-        }
-        if (isset($filter["slug"]) && $filter["slug"]) {
-            $query = $query->where("slug", $filter["slug"]);
-        }
-        if (isset($filter["search"]) && $filter["search"]) {
-            $query = $query->where("title", 'like', $filter["search"] . '%');
-        }
-        if (isset($filter["offset"]) && $filter["offset"]) {
-            $query = $query->offset($filter["offset"]);
-        }
-        if (isset($filter["limit"]) && $filter["limit"]) {
-            $query = $query->limit($filter["limit"]);
-        }
-        $query = $query->get();
-        if ($query) {
-            $result = $query->toArray();
-        }
-        return $result;
-    }
+    // public function newsTags()
+    // {
+    //     return $this->hasManyThrough(
+    //         TagsModel::class,
+    //         NewsTagsModel::class,
+    //         'news_id',
+    //         'id'
+    //     );
+    // }
 
-    public static function getNewsDetail($filter = NULL)
+    public function pivotNewsTags()
     {
-        $result = array();
-        $query = NewsModel::select("news.*", "news_category.name as news_category_name", "personnel.firstname", "personnel.lastname");
-        $query = $query->leftJoin("personnel", "news.created_by", "=", "personnel.user_id");
-        $query = $query->leftJoin("news_category", "news.news_category_id", "=", "news_category.id");
-        if (isset($filter["id"]) && $filter["id"]) {
-            $query = $query->where("news.id", $filter["id"]);
-        }
-        if (isset($filter["title"]) && $filter["title"]) {
-            $query = $query->where("news.title", $filter["title"]);
-        }
-        if (isset($filter["status"]) && $filter["status"]) {
-            $query = $query->where("news.status", $filter["status"]);
-        }
-        if (isset($filter["slug"]) && $filter["slug"]) {
-            $query = $query->where("news.slug", $filter["slug"]);
-        }
-        if (isset($filter["search"]) && $filter["search"]) {
-            $query = $query->where("news.title", 'like', $filter["search"] . '%');
-        }
-        $query = $query->first();
-        if ($query) {
-            $result = $query->toArray();
-        }
-        return $result;
-    }
-
-    public static function getListNewsDetail($filter = NULL)
-    {
-        $result = array();
-        $query = NewsModel::select("news.*", "news_category.name as news_category_name", "personnel.firstname", "personnel.lastname");
-        $query = $query->leftJoin("personnel", "news.created_by", "=", "personnel.user_id");
-        $query = $query->leftJoin("news_category", "news.news_category_id", "=", "news_category.id");
-        if (isset($filter["id"]) && $filter["id"]) {
-            $query = $query->where("news.id", $filter["id"]);
-        }
-        if (isset($filter["title"]) && $filter["title"]) {
-            $query = $query->where("news.title", $filter["title"]);
-        }
-        if (isset($filter["slug"]) && $filter["slug"]) {
-            $query = $query->where("news.slug", $filter["slug"]);
-        }
-        if (isset($filter["status"]) && $filter["status"]) {
-            $query = $query->where("news.status", $filter["status"]);
-        }
-        if (isset($filter["search"]) && $filter["search"]) {
-            $query = $query->where("news.title", 'like', $filter["search"] . '%');
-        }
-        if (isset($filter["offset"]) && $filter["offset"]) {
-            $query = $query->offset($filter["offset"]);
-        }
-        if (isset($filter["limit"]) && $filter["limit"]) {
-            $query = $query->limit($filter["limit"]);
-        }
-        $query = $query->get();
-        if ($query) {
-            $result = $query->toArray();
-        }
-        return $result;
+        return $this->belongsToMany(
+            TagsModel::class,
+            NewsTagsModel::class,
+            'news_id',
+            'news_tag_id'
+        );
     }
 }

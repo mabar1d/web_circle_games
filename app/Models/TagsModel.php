@@ -8,20 +8,15 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Auth;
 
-class GameModel extends Model
+class TagsModel extends Model
 {
     use HasFactory;
     use SoftDeletes;
 
-    protected $table = 'm_game';
+    protected $table = 'tag';
     protected $primaryKey = 'id';
     protected $fillable = [
-        'title',
-        'desc',
-        'image',
-        'status',
-        'created_by',
-        'updated_by'
+        'name'
     ];
     protected $dates = ['deleted_at'];
 
@@ -32,7 +27,6 @@ class GameModel extends Model
         //create event to happen on creating
         self::creating(function ($model) {
             $model->created_by = Auth::id();
-            // $model->m_game_uid = Str::orderedUuid()->getHex()->toString();
         });
 
         //create event to happen on creating
@@ -51,5 +45,10 @@ class GameModel extends Model
     {
         return Carbon::parse($this->attributes['updated_at'])
             ->format('d M Y H:i');
+    }
+
+    public function newsTags()
+    {
+        return $this->hasMany(NewsTagsModel::class, 'news_tag_id', 'id');
     }
 }

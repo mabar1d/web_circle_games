@@ -2,13 +2,11 @@
 
 namespace App\Http\Controllers\Backend;
 
-use App\Helpers\ApiCircleapkMenusHelper;
 use App\Http\Controllers\Controller;
 use App\Models\ApkMenuModel;
 use App\Models\NewsModel;
 use Exception;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\DB;
 use Yajra\DataTables\Facades\DataTables;
@@ -57,7 +55,7 @@ class ApkMenuController extends Controller
         try {
             if (request()->ajax()) {
                 $requestData = $request->input();
-                $apkMenuId = isset($requestData["id"]) && $requestData["id"] ? Crypt::decryptString($requestData["id"]) : null;
+                $apkMenuId = isset($requestData["id"]) && $requestData["id"] ? $requestData["id"] : null;
                 $isDisabled = false;
                 $data = NULL;
                 if ($apkMenuId) {
@@ -87,7 +85,7 @@ class ApkMenuController extends Controller
             if (!isset($requestData["apkMenuTitle"]) || !$requestData["apkMenuTitle"]) {
                 throw new Exception("Title APK Menu is Empty!", 1);
             }
-            $apkMenuId = isset($requestData["apkMenuId"]) && $requestData["apkMenuId"] ? Crypt::decryptString($requestData["apkMenuId"]) : NULL;
+            $apkMenuId = isset($requestData["apkMenuId"]) && $requestData["apkMenuId"] ? $requestData["apkMenuId"] : NULL;
             $title = isset($requestData["apkMenuTitle"]) && $requestData["apkMenuTitle"] ? trim($requestData["apkMenuTitle"]) : NULL;
             $order = isset($requestData["apkMenuOrder"]) && $requestData["apkMenuOrder"] ? trim($requestData["apkMenuOrder"]) : NULL;
             $status = isset($requestData["apkMenuStatus"]) && $requestData["apkMenuStatus"] ? $requestData["apkMenuStatus"] : 0;
@@ -132,7 +130,7 @@ class ApkMenuController extends Controller
         DB::beginTransaction();
         try {
             $requestData = $request->input();
-            $apkMenuId = isset($requestData["id"]) && $requestData["id"] ? Crypt::decryptString($requestData["id"]) : NULL;
+            $apkMenuId = isset($requestData["id"]) && $requestData["id"] ? $requestData["id"] : NULL;
             if (!$apkMenuId) {
                 throw new Exception("apkMenu Id is Empty!", 1);
             }

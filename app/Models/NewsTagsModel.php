@@ -5,25 +5,18 @@ namespace App\Models;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Auth;
 
-class GameModel extends Model
+class NewsTagsModel extends Model
 {
     use HasFactory;
-    use SoftDeletes;
 
-    protected $table = 'm_game';
+    protected $table = 'news_with_tag';
     protected $primaryKey = 'id';
     protected $fillable = [
-        'title',
-        'desc',
-        'image',
-        'status',
-        'created_by',
-        'updated_by'
+        'news_id',
+        'news_tag_id'
     ];
-    protected $dates = ['deleted_at'];
 
     protected static function boot()
     {
@@ -32,7 +25,6 @@ class GameModel extends Model
         //create event to happen on creating
         self::creating(function ($model) {
             $model->created_by = Auth::id();
-            // $model->m_game_uid = Str::orderedUuid()->getHex()->toString();
         });
 
         //create event to happen on creating
@@ -51,5 +43,15 @@ class GameModel extends Model
     {
         return Carbon::parse($this->attributes['updated_at'])
             ->format('d M Y H:i');
+    }
+
+    public function news()
+    {
+        return $this->belongsTo(NewsModel::class);
+    }
+
+    public function tags()
+    {
+        return $this->belongsTo(TagsModel::class);
     }
 }

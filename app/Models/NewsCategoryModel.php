@@ -4,12 +4,11 @@ namespace App\Models;
 
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\Pivot;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Crypt;
 
-class NewsCategoryModel extends Model
+class NewsCategoryModel extends Pivot
 {
     use HasFactory;
     use SoftDeletes;
@@ -39,11 +38,6 @@ class NewsCategoryModel extends Model
         });
     }
 
-    public function getIdAttribute() //to show id column
-    {
-        return Crypt::encryptString($this->attributes['id']);
-    }
-
     public function getCreatedAtAttribute() //to show created_at column
     {
         return Carbon::parse($this->attributes['created_at'])
@@ -53,5 +47,10 @@ class NewsCategoryModel extends Model
     {
         return Carbon::parse($this->attributes['updated_at'])
             ->format('d M Y H:i');
+    }
+
+    public function news()
+    {
+        return $this->belongsTo(NewsModel::class);
     }
 }

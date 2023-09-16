@@ -7,6 +7,7 @@
             </button>
         </div>
         <form id="formModalAdd">
+            <input type="hidden" name="newsId" value="{{ isset($data['id']) && $data['id'] ? $data['id'] : null }}">
             <div class="modal-body">
                 <div class="card-body">
                     <div class="form-group">
@@ -26,26 +27,37 @@
                         <select class="form-control select2" style="width: 100%;" name="newsCategory"
                             id="inputCategory">
                             <option value="">Select a Category</option>
+                            @if (isset($data['news_category_id']) && $data['news_category_id'])
+                                <option value="{{ $data['news_category_id'] }}" selected>
+                                    {{ $data['news_category_name'] }}</option>
+                            @endif
                         </select>
                     </div>
                     <div class="form-group">
                         <label for="inputTitle">Title</label>
                         <input type="text" name="newsTitle" class="form-control" id="inputTitle"
-                            placeholder="Enter Game Title">
+                            placeholder="Enter Game Title"
+                            value="{{ isset($data['title']) && $data['title'] ? $data['title'] : null }}">
                     </div>
                     <div class="form-group">
                         <label for="inputDesc">Content</label>
-                        <textarea name="newsContent" class="form-control" id="inputDesc" cols="10" rows="5"></textarea>
+                        <textarea name="newsContent" class="form-control" id="inputDesc" cols="10" rows="5">{{ isset($data['content']) && $data['content'] ? $data['content'] : null }}</textarea>
                     </div>
                     <div class="form-group">
                         <label for="inputTags">Tags</label>
                         <select class="form-control select2" style="width: 100%;" name="newsTags[]" id="inputTags"
                             data-tags="true" data-placeholder="TAGS" multiple="multiple">
+                            @if (isset($data['array_tags']) && $data['array_tags'])
+                                @foreach ($data['array_tags'] as $valueTags)
+                                    <option value="{{ $valueTags }}" selected>
+                                        {{ $valueTags }}</option>
+                                @endforeach
+                            @endif
                         </select>
                     </div>
                     <div class="form-check">
                         <input type="checkbox" class="form-check-input" id="inputStatus" name="newsStatus"
-                            value="1" checked>
+                            value="1" {{ isset($data['status']) && $data['status'] ? 'checked' : null }}>
                         <label class="form-check-label" for="inputStatus">Active</label>
                     </div>
                 </div>
@@ -101,7 +113,7 @@
             tokenSeparators: [","],
             multiple: true,
             ajax: {
-                url: "{{ url('be/master/news_category/getDropdown') }}",
+                url: "{{ url('be/master/tags/getDropdown') }}",
                 dataType: "json",
                 data: function(params) {
                     var query = {
@@ -115,7 +127,7 @@
                         var results = [];
                         $.each(response.data, function(index, data) {
                             results.push({
-                                id: data.id,
+                                id: data.name,
                                 text: data.name
                             });
                         });
@@ -140,10 +152,11 @@
                 encode: true,
                 success: function(response) {
                     alert(response.message);
-                    // if (response.code == 0) {
-                    //     // Hide Modal
-                    //     $('#modalFormAdd').modal('hide');
-                    // }
+                    if (response.code == 0) {
+                        // Hide Modal
+                        $('#modalFormAdd').modal('hide');
+                        $('#tbl_list').DataTable().ajax.reload();
+                    }
                 },
                 error: function(error) {
                     alert(error.message);

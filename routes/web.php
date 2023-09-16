@@ -8,6 +8,7 @@ use App\Http\Controllers\Backend\DashboardController;
 use App\Http\Controllers\Backend\GameController;
 use App\Http\Controllers\Backend\NewsCategoryController;
 use App\Http\Controllers\Backend\NewsController;
+use App\Http\Controllers\Backend\TagsController;
 use App\Http\Controllers\Backend\TournamentMatchController;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Route;
@@ -66,6 +67,9 @@ $router->group(['prefix' => 'be', 'middleware' => 'auth'], function ($router) {
     $router->post('master/apk_menu/getFormAdd', [ApkMenuController::class, 'getFormAdd']);
     $router->post('master/apk_menu/store', [ApkMenuController::class, 'store']);
     $router->post('master/apk_menu/delete', [ApkMenuController::class, 'delete']);
+
+    //TAGS
+    $router->get('master/tags/getDropdown', [TagsController::class, 'getDropdownData']);
 
     //NEWS
     $router->get('news', [NewsController::class, 'index']);

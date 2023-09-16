@@ -6,7 +6,6 @@ use App\Http\Controllers\Controller;
 use App\Models\GameModel;
 use Exception;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\DB;
 use Yajra\DataTables\Facades\DataTables;
 
@@ -55,7 +54,7 @@ class GameController extends Controller
         try {
             if (request()->ajax()) {
                 $requestData = $request->input();
-                $gameId = isset($requestData["id"]) && $requestData["id"] ? Crypt::decryptString($requestData["id"]) : null;
+                $gameId = isset($requestData["id"]) && $requestData["id"] ? $requestData["id"] : null;
                 $isDisabled = false;
                 $data = NULL;
                 if ($gameId) {
@@ -85,7 +84,7 @@ class GameController extends Controller
             if (!isset($requestData["gameTitle"]) || !$requestData["gameTitle"]) {
                 throw new Exception("Title Game is Empty!", 1);
             }
-            $gameId = isset($requestData["gameId"]) && $requestData["gameId"] ? Crypt::decryptString($requestData["gameId"]) : NULL;
+            $gameId = isset($requestData["gameId"]) && $requestData["gameId"] ? $requestData["gameId"] : NULL;
             $title = isset($requestData["gameTitle"]) && $requestData["gameTitle"] ? trim($requestData["gameTitle"]) : NULL;
             $desc = isset($requestData["gameDesc"]) && $requestData["gameDesc"] ? trim($requestData["gameDesc"]) : NULL;
             $image = isset($requestData["gameImage"]) && $requestData["gameImage"] ? trim($requestData["gameImage"]) : NULL;
@@ -132,7 +131,7 @@ class GameController extends Controller
         DB::beginTransaction();
         try {
             $requestData = $request->input();
-            $gameId = isset($requestData["id"]) && $requestData["id"] ? Crypt::decryptString($requestData["id"]) : NULL;
+            $gameId = isset($requestData["id"]) && $requestData["id"] ? $requestData["id"] : NULL;
             if (!$gameId) {
                 throw new Exception("Game Id is Empty!", 1);
             }

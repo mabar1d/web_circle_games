@@ -39,6 +39,7 @@
                                         <th>Title</th>
                                         <th>Category</th>
                                         <th>Tags</th>
+                                        <th>Status</th>
                                         <th>Action</th>
                                     </tr>
                                 </thead>
@@ -105,12 +106,62 @@
                         name: 'tag'
                     },
                     {
+                        data: 'status',
+                        name: 'status'
+                    },
+                    {
                         data: 'action',
                         name: 'action',
                         orderable: false,
                         searchable: false
                     }
-                ]
+                ],
+                drawCallback: function(settings) {
+                    $(".btnView").click(function() {
+                        let id = $(this).data('id');
+                        let urlBtnView = "{{ url('be/news/getFormAdd') }}";
+                        $.ajax({
+                            url: urlBtnView,
+                            type: "POST",
+                            data: {
+                                "id": id
+                            },
+                            success: function(response) {
+                                $('#modalFormAdd').empty();
+                                $('#modalFormAdd').html(response);
+                                // Display Modal
+                                $('#modalFormAdd').modal('show');
+                            },
+                            error: function(error) {
+                                alert(error);
+                            }
+                        })
+                    });
+
+                    $(".btnDelete").click(function() {
+                        if (confirm('Are You Sure?')) {
+                            let id = $(this).data('id');
+                            let urlBtnDelete = "{{ url('be/news/delete') }}";
+                            $.ajax({
+                                url: urlBtnDelete,
+                                type: "POST",
+                                dataType: "json",
+                                data: {
+                                    "id": id
+                                },
+                                success: function(response) {
+                                    alert(response.message);
+                                    if (response.code == 0) {
+                                        $('#tbl_list').DataTable().ajax.reload();
+                                    }
+                                },
+                                error: function(error) {
+                                    alert(error);
+                                }
+                            })
+                        }
+                    });
+                }
             });
 
             $('#btnFormAdd').click(function(e) {
@@ -118,9 +169,6 @@
                 $.ajax({
                     type: "POST",
                     url: "{{ url('be/news/getFormAdd') }}",
-                    data: {
-                        "id": "test"
-                    },
                     success: function(response) {
                         $('#modalFormAdd').empty();
                         $('#modalFormAdd').html(response);
