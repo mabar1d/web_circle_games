@@ -7,16 +7,18 @@
             </button>
         </div>
         <form id="formModalAdd">
+            <input type="hidden" name="gameId" value="{{ isset($data['id']) && $data['id'] ? $data['id'] : null }}">
             <div class="modal-body">
                 <div class="card-body">
                     <div class="form-group">
                         <label for="inputTitle">Title</label>
                         <input type="text" name="gameTitle" class="form-control" id="inputTitle"
-                            placeholder="Enter Game Title">
+                            placeholder="Enter Game Title"
+                            value="{{ isset($data['title']) && $data['title'] ? $data['title'] : null }}">
                     </div>
                     <div class="form-group">
                         <label for="inputDesc">Description</label>
-                        <textarea name="gameDesc" class="form-control" id="inputDesc" cols="10" rows="5"></textarea>
+                        <textarea name="gameDesc" class="form-control" id="inputDesc" cols="10" rows="5" placeholder="Description">{{ isset($data['desc']) && $data['desc'] ? $data['desc'] : null }}</textarea>
                     </div>
                     <div class="form-group">
                         <label for="inputImage">File input</label>
@@ -32,7 +34,7 @@
                     </div>
                     <div class="form-check">
                         <input type="checkbox" class="form-check-input" id="inputStatus" name="gameStatus"
-                            value="1" checked>
+                            value="1" {{ isset($data['status']) && $data['status'] ? 'checked' : '' }}>
                         <label class="form-check-label" for="inputStatus">Active</label>
                     </div>
                 </div>
@@ -64,6 +66,7 @@
                     if (response.code == 0) {
                         // Hide Modal
                         $('#modalFormAdd').modal('hide');
+                        $('#tbl_list').DataTable().ajax.reload();
                     }
                 },
                 error: function(error) {

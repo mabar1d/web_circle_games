@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\GameModel;
 use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\DB;
 use Yajra\DataTables\Facades\DataTables;
 
@@ -26,7 +27,7 @@ class GameController extends Controller
         if (request()->ajax()) {
             $requestData = $request->input();
             $listGame = GameModel::select(
-                'm_game_uid',
+                'id',
                 'title',
                 'desc',
                 'image',
@@ -40,8 +41,8 @@ class GameController extends Controller
                 })
                 ->addColumn('action', function ($row) {
                     $result = "";
-                    $result .= '<button type="button" class="btn btn-warning btn-xs m-1">View</button>';
-                    $result .= '<button type="button" class="btn btn-danger btn-xs m-1">Delete</button>';
+                    $result .= '<button type="button" class="btn btn-warning btn-xs m-1 btnView" data-id="' . $row['id'] . '">View</button>';
+                    $result .= '<button type="button" class="btn btn-danger btn-xs m-1 btnDelete" data-id="' . $row['id'] . '">Delete</button>';
                     return $result;
                 })
                 ->rawColumns(['status', 'action'])
@@ -54,7 +55,18 @@ class GameController extends Controller
         try {
             if (request()->ajax()) {
                 $requestData = $request->input();
-                return view('backend/game/modalFormAdd');
+                $gameId = isset($requestData["id"]) && $requestData["id"] ? Crypt::decryptString($requestData["id"]) : null;
+                $isDisabled = false;
+                $data = NULL;
+                if ($gameId) {
+                    $isDisabled = true;
+                    $data = GameModel::findOrFail($gameId);
+                }
+                $throwData = [
+                    "data" => $data,
+                    "isDisabled" => $isDisabled
+                ];
+                return view('backend/game/modalFormAdd', $throwData);
             }
         } catch (Exception $e) {
             return $e->getMessage();
@@ -73,6 +85,7 @@ class GameController extends Controller
             if (!isset($requestData["gameTitle"]) || !$requestData["gameTitle"]) {
                 throw new Exception("Title Game is Empty!", 1);
             }
+            $gameId = isset($requestData["gameId"]) && $requestData["gameId"] ? Crypt::decryptString($requestData["gameId"]) : NULL;
             $title = isset($requestData["gameTitle"]) && $requestData["gameTitle"] ? trim(strtolower($requestData["gameTitle"])) : NULL;
             $desc = isset($requestData["gameDesc"]) && $requestData["gameDesc"] ? trim($requestData["gameDesc"]) : NULL;
             $image = isset($requestData["gameImage"]) && $requestData["gameImage"] ? trim($requestData["gameImage"]) : NULL;
@@ -83,14 +96,50 @@ class GameController extends Controller
                 "image" => $image,
                 "status" => $status
             );
-            $checkDataExist = GameModel::where("title", $title)->count();
-            if ($checkDataExist != 0) {
-                throw new Exception("Game Already Exist!");
+            if (!$gameId) {
+                $checkDataExist = GameModel::where("title", $title)->count();
+                if ($checkDataExist != 0) {
+                    throw new Exception("Game Already Exist!");
+                }
             }
-            GameModel::create($dataStore);
+            GameModel::updateOrCreate(
+                [
+                    "id" => $gameId
+                ],
+                $dataStore
+            );
             $response = array(
                 "code" => 0,
                 "message" => "Success Store Data"
+            );
+            DB::commit();
+        } catch (Exception $e) {
+            $response = array(
+                "code" => $e->getCode(),
+                "message" => $e->getMessage()
+            );
+            DB::rollBack();
+        }
+        return json_encode($response);
+    }
+
+    public function delete(Request $request)
+    {
+        $response = array(
+            "code" => 1,
+            "message" => ""
+        );
+        DB::beginTransaction();
+        try {
+            $requestData = $request->input();
+            $gameId = isset($requestData["id"]) && $requestData["id"] ? Crypt::decryptString($requestData["id"]) : NULL;
+            if (!$gameId) {
+                throw new Exception("Game Id is Empty!", 1);
+            }
+            GameModel::findOrFail($gameId)->delete();
+            $response = array(
+                "code" => 0,
+                "message" => "Success Delete Data"
             );
             DB::commit();
         } catch (Exception $e) {

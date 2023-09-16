@@ -1,17 +1,13 @@
 @extends('backend.layout')
 
-@section('title')
-    Master Game
-@endsection
-
 @push('plugin_css')
     <!-- DataTables -->
     <link rel="stylesheet" href="{{ asset('adminlte/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css') }}">
     <link rel="stylesheet" href="{{ asset('adminlte/plugins/datatables-responsive/css/responsive.bootstrap4.min.css') }}">
     <link rel="stylesheet" href="{{ asset('adminlte/plugins/datatables-buttons/css/buttons.bootstrap4.min.css') }}">
-@endpush
-
-@push('script_css')
+    <!-- Select2 -->
+    <link rel="stylesheet" href="{{ asset('adminlte/plugins/select2/css/select2.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('adminlte/plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css') }}">
 @endpush
 
 @section('content')
@@ -20,7 +16,7 @@
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
-                    <h1 class="m-0">Master Game</h1>
+                    <h1 class="m-0">APK Menu</h1>
                 </div><!-- /.col -->
             </div><!-- /.row -->
         </div><!-- /.container-fluid -->
@@ -41,7 +37,7 @@
                                     <tr>
                                         <th>No</th>
                                         <th>Title</th>
-                                        <th>Description</th>
+                                        <th>Order</th>
                                         <th>Status</th>
                                         <th>Action</th>
                                     </tr>
@@ -52,6 +48,7 @@
                         </div>
                     </div>
                 </div>
+
             </div>
         </div>
         <!-- /.row -->
@@ -77,6 +74,8 @@
     <script src="{{ asset('adminlte/plugins/datatables-buttons/js/buttons.html5.min.js') }}"></script>
     <script src="{{ asset('adminlte/plugins/datatables-buttons/js/buttons.print.min.js') }}"></script>
     <script src="{{ asset('adminlte/plugins/datatables-buttons/js/buttons.colVis.min.js') }}"></script>
+    <!-- Select2 -->
+    <script src="{{ asset('adminlte/plugins/select2/js/select2.full.min.js') }}"></script>
 @endpush
 
 @push('script_js')
@@ -85,7 +84,7 @@
             $('#tbl_list').DataTable({
                 processing: true,
                 serverSide: true,
-                ajax: "{{ url('be/master/game/getDatatable') }}",
+                ajax: "{{ url('be/master/apk_menu/getDatatable') }}",
                 order: [],
                 columns: [{
                         data: 'DT_RowIndex',
@@ -98,8 +97,8 @@
                         name: 'title'
                     },
                     {
-                        data: 'desc',
-                        name: 'desc'
+                        data: 'order',
+                        name: 'order'
                     },
                     {
                         data: 'status',
@@ -111,63 +110,17 @@
                         orderable: false,
                         searchable: false
                     }
-                ],
-                drawCallback: function(settings) {
-                    $(".btnView").click(function() {
-                        let id = $(this).data('id');
-                        let urlBtnView = "{{ url('be/master/game/getFormAdd') }}";
-                        $.ajax({
-                            url: urlBtnView,
-                            type: "POST",
-                            data: {
-                                "id": id
-                            },
-                            success: function(response) {
-                                $('#modalFormAdd').empty();
-                                $('#modalFormAdd').html(response);
-                                // Display Modal
-                                $('#modalFormAdd').modal('show');
-                            },
-                            error: function(error) {
-                                alert(error);
-                            }
-                        })
-                    });
-
-                    $(".btnDelete").click(function() {
-                        if (confirm('Are You Sure?')) {
-                            let id = $(this).data('id');
-                            let urlBtnDelete = "{{ url('be/master/game/delete') }}";
-                            $.ajax({
-                                url: urlBtnDelete,
-                                type: "POST",
-                                dataType: "json",
-                                data: {
-                                    "id": id
-                                },
-                                success: function(response) {
-                                    alert(response.message);
-                                    if (response.code == 0) {
-                                        $('#tbl_list').DataTable().ajax.reload();
-                                    }
-                                },
-                                error: function(error) {
-                                    alert(error);
-                                }
-                            })
-                        }
-                    });
-                }
+                ]
             });
 
             $('#btnFormAdd').click(function(e) {
                 e.preventDefault();
                 $.ajax({
                     type: "POST",
-                    url: "{{ url('be/master/game/getFormAdd') }}",
-                    // data: {
-                    //     "id": "test"
-                    // },
+                    url: "{{ url('be/master/apk_menu/getFormAdd') }}",
+                    data: {
+                        "id": "test"
+                    },
                     success: function(response) {
                         $('#modalFormAdd').empty();
                         $('#modalFormAdd').html(response);

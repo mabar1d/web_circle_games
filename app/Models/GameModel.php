@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Str;
 
 class GameModel extends Model
@@ -17,7 +18,6 @@ class GameModel extends Model
     protected $table = 'm_game';
     protected $primaryKey = 'id';
     protected $fillable = [
-        'm_game_uid',
         'title',
         'desc',
         'image',
@@ -42,11 +42,17 @@ class GameModel extends Model
         });
     }
 
+    public function getIdAttribute() //to show id column
+    {
+        return Crypt::encryptString($this->attributes['id']);
+    }
+
     public function getCreatedAtAttribute() //to show created_at column
     {
         return Carbon::parse($this->attributes['created_at'])
             ->format('d M Y H:i');
     }
+
     public function getUpdatedAtAttribute() //to show updated_at column
     {
         return Carbon::parse($this->attributes['updated_at'])

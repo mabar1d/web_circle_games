@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Backend\ApkMenuController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\MidtransController;
 use App\Http\Controllers\TournamentController;
@@ -43,6 +44,14 @@ $router->group(['prefix' => 'callbackMidtrans'], function ($router) {
 
 $router->group(['prefix' => 'be', 'middleware' => 'auth'], function ($router) {
     $router->get('dashboard', [DashboardController::class, 'index']);
+
+    //MASTER GAME
+    $router->get('master/game', [GameController::class, 'index']);
+    $router->get('master/game/getDatatable', [GameController::class, 'getDatatable']);
+    $router->post('master/game/getFormAdd', [GameController::class, 'getFormAdd']);
+    $router->post('master/game/store', [GameController::class, 'store']);
+    $router->post('master/game/delete', [GameController::class, 'delete']);
+
     //NEWS CATEGORY
     $router->get('master/news_category', [NewsCategoryController::class, 'index']);
     $router->get('master/news_category/getDatatable', [NewsCategoryController::class, 'getDatatable']);
@@ -51,12 +60,13 @@ $router->group(['prefix' => 'be', 'middleware' => 'auth'], function ($router) {
     $router->get('master/news_category/delete', [NewsCategoryController::class, 'delete']);
     $router->get('master/news_category/getDropdown', [NewsCategoryController::class, 'getDropdownData']);
 
-    //MASTER GAME
-    $router->get('master/game', [GameController::class, 'index']);
-    $router->get('master/game/getDatatable', [GameController::class, 'getDatatable']);
-    $router->post('master/game/getFormAdd', [GameController::class, 'getFormAdd']);
-    $router->post('master/game/store', [GameController::class, 'store']);
-    $router->post('master/game/delete', [GameController::class, 'delete']);
+    //APK MENU
+    $router->get('master/apk_menu', [ApkMenuController::class, 'index']);
+    $router->get('master/apk_menu/getDatatable', [ApkMenuController::class, 'getDatatable']);
+    $router->get('master/apk_menu/formModal', [ApkMenuController::class, 'form_modal']);
+    $router->get('master/apk_menu/store', [ApkMenuController::class, 'store']);
+    $router->get('master/apk_menu/delete', [ApkMenuController::class, 'delete']);
+    $router->get('master/apk_menu/getDropdown', [ApkMenuController::class, 'getDropdownData']);
 
     //NEWS
     $router->get('news', [NewsController::class, 'index']);

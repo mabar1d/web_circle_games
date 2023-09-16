@@ -65,9 +65,9 @@
             <ul class="navbar-nav ml-auto">
                 <!-- Navbar Search -->
                 <li class="nav-item">
-                    <a class="nav-link" data-widget="navbar-search" href="#" role="button">
+                    {{-- <a class="nav-link" data-widget="navbar-search" href="#" role="button">
                         <i class="fas fa-search"></i>
-                    </a>
+                    </a> --}}
                     <div class="navbar-search-block">
                         <form class="form-inline">
                             <div class="input-group input-group-sm">
@@ -185,7 +185,7 @@
                             </ul>
                             <ul class="nav nav-treeview">
                                 <li class="nav-item">
-                                    <a href="/newsCategory" class="nav-link">
+                                    <a href="{{ url('be/master/apk_menu') }}" class="nav-link">
                                         <i class="far fa-newspaper nav-icon"></i>
                                         <p>Menu APK</p>
                                     </a>
