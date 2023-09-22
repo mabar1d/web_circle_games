@@ -97,12 +97,9 @@ $router->group(['prefix' => 'be', 'middleware' => 'auth'], function ($router) {
     $router->post('tournament/rollRandomMatch', [TournamentController::class, 'getFormTournamentMatchRandom']);
 
     //TOURNAMENT MATCH
-    $router->get('tournament/match', [TournamentMatchController::class, 'index']);
-    $router->get('tournament/match/getDatatable', [TournamentMatchController::class, 'getDatatable']);
-    $router->post('tournament/match/getFormAdd', [TournamentMatchController::class, 'getFormAdd']);
-    $router->post('tournament/match/store', [TournamentMatchController::class, 'store']);
-    $router->post('tournament/match/delete', [TournamentMatchController::class, 'delete']);
-});
-
-$router->group(['prefix' => 'master', 'middleware' => 'auth'], function ($router) {
+    $router->get('tournament/tree/match', [TournamentMatchController::class, 'indexTreeMatch']);
+    $router->get('tournament/tree/match/getDatatable', [TournamentMatchController::class, 'getDatatableTreeMatch']);
+    $router->post('tournament/tree/match/getFormAdd', [TournamentMatchController::class, 'getFormAddTreeMatch']);
+    $router->post('tournament/tree/match/store', [TournamentMatchController::class, 'storeTreeMatch']);
+    $router->post('tournament/tree/match/delete', [TournamentMatchController::class, 'deleteTreeMatch']);
 });

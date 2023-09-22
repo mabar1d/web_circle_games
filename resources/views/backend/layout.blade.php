@@ -218,9 +218,9 @@
                             </a>
                             <ul class="nav nav-treeview">
                                 <li class="nav-item">
-                                    <a href="{{ url('be/tournament/match') }}" class="nav-link">
+                                    <a href="{{ url('be/tournament/tree/match') }}" class="nav-link">
                                         <i class="far fa-newspaper nav-icon"></i>
-                                        <p>Tournament Match</p>
+                                        <p>Tournament Tree Match</p>
                                     </a>
                                 </li>
                             </ul>

@@ -23,7 +23,7 @@
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
-                    <h1 class="m-0">Tournament Match</h1>
+                    <h1 class="m-0">Tournament Tree Match</h1>
                 </div><!-- /.col -->
             </div><!-- /.row -->
         </div><!-- /.container-fluid -->
@@ -149,6 +149,7 @@
                     // allowClear: true,
                     data: function(params) {
                         var query = {
+                            typeTournament: 2, //tournament tree
                             search: params.term,
                             type: 'public'
                         }

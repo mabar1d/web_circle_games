@@ -284,6 +284,9 @@ class TournamentController extends BaseController
         try {
             $requestData = $request->input();
             $getData = TournamentModel::select("id", "name");
+            if (isset($requestData["typeTournament"]) && $requestData["typeTournament"]) {
+                $getData = $getData->where('type', $requestData["typeTournament"]);
+            }
             if (isset($requestData["search"]) && $requestData["search"]) {
                 $getData = $getData->where('name', 'like', '%' . $requestData["search"] . '%');
             }

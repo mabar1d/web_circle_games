@@ -46,6 +46,7 @@
             <!-- /.card-body -->
             <div class="card-footer">
                 <button type="submit" class="btn btn-primary" id="btnSubmit">Submit</button>
+                <a class="btn btn-primary" id="btnLook" style="display: none" target="_blank">Look Tournament Tree</a>
             </div>
         </form>
     </div>
@@ -64,15 +65,21 @@
         $("#formInputTournamentMatch").submit(function(e) {
             e.preventDefault();
             var formSerialize = $("#formInputTournamentMatch").serialize();
+            let tournamentId = $("[name='tournament_id']").val();
             $.ajax({
                 type: "POST",
-                url: "{{ url('be/tournament/match/store') }}",
+                url: "{{ url('be/tournament/tree/match/store') }}",
                 data: formSerialize,
                 dataType: "json",
                 encode: true,
                 success: function(response) {
                     if (response.code == '00') {
                         alert(response.desc);
+                        $("#btnLook").show();
+                        $("#btnLook").attr('href',
+                            "{{ url('look_tournament?tournament_id=') }}" +
+                            tournamentId
+                        );
                     }
                 },
                 error: function(error) {

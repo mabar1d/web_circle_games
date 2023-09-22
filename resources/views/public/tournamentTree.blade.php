@@ -6,18 +6,18 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
-    <link rel="stylesheet" href="{{asset('css/jquery.bracket.min.css')}}">
+    <link rel="stylesheet" href="{{ asset('css/jquery.bracket.min.css') }}">
 </head>
 
 <body>
-    <input type="hidden" value="{{$tournament_id}}" id="tournament_id" readonly>
+    <input type="hidden" value="{{ $tournament_id }}" id="tournament_id" readonly>
     <div class="tournament"></div>
-    <script src="{{asset('js/jquery.js')}}"></script>
-    <script src="{{asset('js/jquery.bracket.min.js')}}"></script>
+    <script src="{{ asset('js/jquery.js') }}"></script>
+    <script src="{{ asset('js/jquery.bracket.min.js') }}"></script>
     <script>
         function createBracketTournament() {
             jQuery.ajax({
-                url: "{{ url('get_tournament_tree_match')}}",
+                url: "{{ url('get_tournament_tree_match') }}",
                 type: 'POST',
                 data: {
                     "_token": "{{ csrf_token() }}",
@@ -28,7 +28,7 @@
                     // console.log(response.code);
                     if (response.code == 00) {
                         var minData = response.data;
-                        console.log(minData);
+                        // console.log(minData);
                         // // contoh double elimination
                         // var minData = {
                         //     "teams": [
@@ -165,5 +165,5 @@
 
 
 <?php
-$test = array();
+$test = [];
 ?>

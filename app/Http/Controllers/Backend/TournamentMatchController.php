@@ -18,12 +18,12 @@ class TournamentMatchController extends Controller
         $this->middleware('auth');
     }
 
-    public function index()
+    public function indexTreeMatch()
     {
-        return view('backend.tournamentMatch.index', []);
+        return view('backend.tournamentMatch.indexTreeMatch', []);
     }
 
-    public function getDatatable(Request $request)
+    public function getDatatableTreeMatch(Request $request)
     {
         if (request()->ajax()) {
             $requestData = $request->input();
@@ -60,19 +60,7 @@ class TournamentMatchController extends Controller
         }
     }
 
-    public function getFormAdd(Request $request)
-    {
-        try {
-            if (request()->ajax()) {
-                $requestData = $request->input();
-                return view('backend/news/modalFormAdd');
-            }
-        } catch (Exception $e) {
-            return $e->getMessage();
-        }
-    }
-
-    public function store(Request $request)
+    public function storeTreeMatch(Request $request)
     {
         $response = array(
             "code" => 1,

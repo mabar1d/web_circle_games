@@ -11,23 +11,10 @@ class HomeController extends BaseController
 
     public function index()
     {
-        $headers = [
-            'Content-Type' => 'application/x-www-form-urlencoded'
-        ];
-
-        $paramsBody = [
-            'user_id' => NULL,
-            'search' => NULL,
-            'offset' => 0,
-            'limit' => 4
-        ];
-
-        $getListNewsApi = ApiCircleGamesHelper::sendRequestApi("POST", "getListNewsWeb", $headers, $paramsBody);
-        $getListNewsResponse = json_decode($getListNewsApi, true);
-        if ($getListNewsResponse['code'] == 00) {
-            $listNews = $getListNewsResponse['data'];
-        }
-        // dd($listNews);
+        $listNews = NewsModel::where("status", 1)
+            ->orderBy("created_at", "DESC")
+            ->limit(4)
+            ->get();
         return view('public.home', [
             "listNews" => $listNews
         ]);
