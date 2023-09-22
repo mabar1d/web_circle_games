@@ -1,29 +1,29 @@
 <div class="modal-dialog modal-lg">
     <div class="modal-content">
         <div class="modal-header">
-            <h4 class="modal-title">Form Master News Category</h4>
+            <h4 class="modal-title">Form Master Category</h4>
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
             </button>
         </div>
         <form id="formModalAdd">
-            <input type="hidden" name="newsCategoryId"
+            <input type="hidden" name="categoryId"
                 value="{{ isset($data['id']) && $data['id'] ? $data['id'] : null }}">
             <div class="modal-body">
                 <div class="card-body">
                     <div class="form-group">
                         <label for="inputTitle">Title</label>
-                        <input type="text" name="newsCategoryTitle" class="form-control" id="inputTitle"
-                            placeholder="Enter News Category Title"
+                        <input type="text" name="categoryTitle" class="form-control" id="inputTitle"
+                            placeholder="Enter Category Title"
                             value="{{ isset($data['name']) && $data['name'] ? $data['name'] : null }}">
                     </div>
                     <div class="form-group">
                         <label for="inputDesc">Description</label>
-                        <textarea name="newsCategoryDesc" class="form-control" id="inputDesc" cols="10" rows="5"
+                        <textarea name="categoryDesc" class="form-control" id="inputDesc" cols="10" rows="5"
                             placeholder="Description">{{ isset($data['desc']) && $data['desc'] ? $data['desc'] : null }}</textarea>
                     </div>
                     <div class="form-check">
-                        <input type="checkbox" class="form-check-input" id="inputStatus" name="newsCategoryStatus"
+                        <input type="checkbox" class="form-check-input" id="inputStatus" name="categoryStatus"
                             value="1" {{ isset($data['status']) && $data['status'] ? 'checked' : '' }}>
                         <label class="form-check-label" for="inputStatus">Active</label>
                     </div>
@@ -47,7 +47,7 @@
             var form = $("#formModalAdd");
             $.ajax({
                 type: "POST",
-                url: "{{ url('be/master/news_category/store') }}",
+                url: "{{ url('be/master/category/store') }}",
                 data: form.serialize(),
                 dataType: "json",
                 encode: true,

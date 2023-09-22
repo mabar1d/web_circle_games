@@ -6,7 +6,7 @@ use App\Http\Controllers\MidtransController;
 use App\Http\Controllers\TournamentController;
 use App\Http\Controllers\Backend\DashboardController;
 use App\Http\Controllers\Backend\GameController;
-use App\Http\Controllers\Backend\NewsCategoryController;
+use App\Http\Controllers\Backend\CategoryController;
 use App\Http\Controllers\Backend\NewsController;
 use App\Http\Controllers\Backend\TagsController;
 use App\Http\Controllers\Backend\TournamentMatchController;
@@ -55,12 +55,12 @@ $router->group(['prefix' => 'be', 'middleware' => 'auth'], function ($router) {
     $router->post('master/game/delete', [GameController::class, 'delete']);
 
     //NEWS CATEGORY
-    $router->get('master/news_category', [NewsCategoryController::class, 'index']);
-    $router->get('master/news_category/getDatatable', [NewsCategoryController::class, 'getDatatable']);
-    $router->post('master/news_category/getFormAdd', [NewsCategoryController::class, 'getFormAdd']);
-    $router->post('master/news_category/store', [NewsCategoryController::class, 'store']);
-    $router->post('master/news_category/delete', [NewsCategoryController::class, 'delete']);
-    $router->get('master/news_category/getDropdown', [NewsCategoryController::class, 'getDropdownData']);
+    $router->get('master/category', [CategoryController::class, 'index']);
+    $router->get('master/category/getDatatable', [CategoryController::class, 'getDatatable']);
+    $router->post('master/category/getFormAdd', [CategoryController::class, 'getFormAdd']);
+    $router->post('master/category/store', [CategoryController::class, 'store']);
+    $router->post('master/category/delete', [CategoryController::class, 'delete']);
+    $router->get('master/category/getDropdown', [CategoryController::class, 'getDropdownData']);
 
     //APK MENU
     $router->get('master/apk_menu', [ApkMenuController::class, 'index']);

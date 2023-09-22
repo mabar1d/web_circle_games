@@ -177,7 +177,7 @@
                             </ul>
                             <ul class="nav nav-treeview">
                                 <li class="nav-item">
-                                    <a href="{{ url('be/master/news_category') }}" class="nav-link">
+                                    <a href="{{ url('be/master/category') }}" class="nav-link">
                                         <i class="far fa-newspaper nav-icon"></i>
                                         <p>News Category</p>
                                     </a>

@@ -78,7 +78,7 @@
         //Initialize Select2 Elements
         $('#inputCategory').select2({
             ajax: {
-                url: "{{ url('be/master/news_category/getDropdown') }}",
+                url: "{{ url('be/master/category/getDropdown') }}",
                 dataType: 'json',
                 // placeholder: "Select a Category",
                 // allowClear: true,

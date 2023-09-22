@@ -37,7 +37,7 @@
                     <div class="form-group">
                         <label for="inputTitle">Title</label>
                         <input type="text" name="videoTitle" class="form-control" id="inputTitle"
-                            placeholder="Enter Game Title"
+                            placeholder="Enter Video Title"
                             value="{{ isset($data['title']) && $data['title'] ? $data['title'] : null }}">
                     </div>
                     <div class="form-group">
@@ -85,7 +85,7 @@
         //Initialize Select2 Elements
         $('#inputCategory').select2({
             ajax: {
-                url: "{{ url('be/master/news_category/getDropdown') }}",
+                url: "{{ url('be/master/category/getDropdown') }}",
                 dataType: 'json',
                 // placeholder: "Select a Category",
                 // allowClear: true,

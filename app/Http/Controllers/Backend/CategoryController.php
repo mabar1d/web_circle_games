@@ -9,7 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Yajra\DataTables\Facades\DataTables;
 
-class NewsCategoryController extends Controller
+class CategoryController extends Controller
 {
     public function __construct()
     {
@@ -18,7 +18,7 @@ class NewsCategoryController extends Controller
 
     public function index()
     {
-        return view('backend.newsCategory.index', []);
+        return view('backend.category.index', []);
     }
 
     public function getDatatable(Request $request)
@@ -53,18 +53,18 @@ class NewsCategoryController extends Controller
         try {
             if (request()->ajax()) {
                 $requestData = $request->input();
-                $newsCategoryId = isset($requestData["id"]) && $requestData["id"] ? $requestData["id"] : null;
+                $categoryId = isset($requestData["id"]) && $requestData["id"] ? $requestData["id"] : null;
                 $isDisabled = false;
                 $data = NULL;
-                if ($newsCategoryId) {
+                if ($categoryId) {
                     $isDisabled = true;
-                    $data = CategoryModel::findOrFail($newsCategoryId);
+                    $data = CategoryModel::findOrFail($categoryId);
                 }
                 $throwData = [
                     "data" => $data,
                     "isDisabled" => $isDisabled
                 ];
-                return view('backend/newsCategory/modalFormAdd', $throwData);
+                return view('backend/category/modalFormAdd', $throwData);
             }
         } catch (Exception $e) {
             return $e->getMessage();
@@ -80,27 +80,27 @@ class NewsCategoryController extends Controller
         DB::beginTransaction();
         try {
             $requestData = $request->input();
-            if (!isset($requestData["newsCategoryTitle"]) || !$requestData["newsCategoryTitle"]) {
-                throw new Exception("Title News Category is Empty!", 1);
+            if (!isset($requestData["categoryTitle"]) || !$requestData["categoryTitle"]) {
+                throw new Exception("Title Category is Empty!", 1);
             }
-            $newsCategoryId = isset($requestData["newsCategoryId"]) && $requestData["newsCategoryId"] ? $requestData["newsCategoryId"] : NULL;
-            $title = isset($requestData["newsCategoryTitle"]) && $requestData["newsCategoryTitle"] ? trim($requestData["newsCategoryTitle"]) : NULL;
-            $desc = isset($requestData["newsCategoryDesc"]) && $requestData["newsCategoryDesc"] ? trim($requestData["newsCategoryDesc"]) : NULL;
-            $status = isset($requestData["newsCategoryStatus"]) && $requestData["newsCategoryStatus"] ? $requestData["newsCategoryStatus"] : 0;
+            $categoryId = isset($requestData["categoryId"]) && $requestData["categoryId"] ? $requestData["categoryId"] : NULL;
+            $title = isset($requestData["categoryTitle"]) && $requestData["categoryTitle"] ? trim($requestData["categoryTitle"]) : NULL;
+            $desc = isset($requestData["categoryDesc"]) && $requestData["categoryDesc"] ? trim($requestData["categoryDesc"]) : NULL;
+            $status = isset($requestData["categoryStatus"]) && $requestData["categoryStatus"] ? $requestData["categoryStatus"] : 0;
             $dataStore = array(
                 "name" => $title,
                 "desc" => $desc,
                 "status" => $status
             );
-            if (!$newsCategoryId) {
+            if (!$categoryId) {
                 $checkDataExist = CategoryModel::where("name", $title)->count();
                 if ($checkDataExist != 0) {
-                    throw new Exception("News Category Already Exist!", 1);
+                    throw new Exception("Category Already Exist!", 1);
                 }
             }
             CategoryModel::updateOrCreate(
                 [
-                    "id" => $newsCategoryId
+                    "id" => $categoryId
                 ],
                 $dataStore
             );
@@ -128,11 +128,11 @@ class NewsCategoryController extends Controller
         DB::beginTransaction();
         try {
             $requestData = $request->input();
-            $newsCategoryId = isset($requestData["id"]) && $requestData["id"] ? $requestData["id"] : NULL;
-            if (!$newsCategoryId) {
-                throw new Exception("News Category Id is Empty!", 1);
+            $categoryId = isset($requestData["id"]) && $requestData["id"] ? $requestData["id"] : NULL;
+            if (!$categoryId) {
+                throw new Exception("Category Id is Empty!", 1);
             }
-            CategoryModel::findOrFail($newsCategoryId)->delete();
+            CategoryModel::findOrFail($categoryId)->delete();
             $response = array(
                 "code" => 0,
                 "message" => "Success Delete Data"

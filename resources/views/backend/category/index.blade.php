@@ -1,7 +1,7 @@
 @extends('backend.layout')
 
 @section('title')
-    News Category
+    Master Category
 @endsection
 
 @push('plugin_css')
@@ -17,7 +17,7 @@
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
-                    <h1 class="m-0">News Category</h1>
+                    <h1 class="m-0">Master Category</h1>
                 </div><!-- /.col -->
             </div><!-- /.row -->
         </div><!-- /.container-fluid -->
@@ -81,7 +81,7 @@
             $('#tbl_list').DataTable({
                 processing: true,
                 serverSide: true,
-                ajax: "{{ url('be/master/news_category/getDatatable') }}",
+                ajax: "{{ url('be/master/category/getDatatable') }}",
                 order: [],
                 columns: [{
                         data: 'DT_RowIndex',
@@ -111,7 +111,7 @@
                 drawCallback: function(settings) {
                     $(".btnView").click(function() {
                         let id = $(this).data('id');
-                        let urlBtnView = "{{ url('be/master/news_category/getFormAdd') }}";
+                        let urlBtnView = "{{ url('be/master/category/getFormAdd') }}";
                         $.ajax({
                             url: urlBtnView,
                             type: "POST",
@@ -133,7 +133,7 @@
                     $(".btnDelete").click(function() {
                         if (confirm('Are You Sure?')) {
                             let id = $(this).data('id');
-                            let urlBtnDelete = "{{ url('be/master/news_category/delete') }}";
+                            let urlBtnDelete = "{{ url('be/master/category/delete') }}";
                             $.ajax({
                                 url: urlBtnDelete,
                                 type: "POST",
@@ -160,7 +160,7 @@
                 e.preventDefault();
                 $.ajax({
                     type: "POST",
-                    url: "{{ url('be/master/news_category/getFormAdd') }}",
+                    url: "{{ url('be/master/category/getFormAdd') }}",
                     success: function(response) {
                         $('#modalFormAdd').empty();
                         $('#modalFormAdd').html(response);
