@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Backend;
 
 use App\Http\Controllers\Controller;
-use App\Models\NewsCategoryModel;
+use App\Models\CategoryModel;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -25,7 +25,7 @@ class NewsCategoryController extends Controller
     {
         if (request()->ajax()) {
             $requestData = $request->input();
-            $listNewsCategory = NewsCategoryModel::select(
+            $listNewsCategory = CategoryModel::select(
                 'id',
                 'name',
                 'desc',
@@ -58,7 +58,7 @@ class NewsCategoryController extends Controller
                 $data = NULL;
                 if ($newsCategoryId) {
                     $isDisabled = true;
-                    $data = NewsCategoryModel::findOrFail($newsCategoryId);
+                    $data = CategoryModel::findOrFail($newsCategoryId);
                 }
                 $throwData = [
                     "data" => $data,
@@ -93,12 +93,12 @@ class NewsCategoryController extends Controller
                 "status" => $status
             );
             if (!$newsCategoryId) {
-                $checkDataExist = NewsCategoryModel::where("name", $title)->count();
+                $checkDataExist = CategoryModel::where("name", $title)->count();
                 if ($checkDataExist != 0) {
                     throw new Exception("News Category Already Exist!", 1);
                 }
             }
-            NewsCategoryModel::updateOrCreate(
+            CategoryModel::updateOrCreate(
                 [
                     "id" => $newsCategoryId
                 ],
@@ -132,7 +132,7 @@ class NewsCategoryController extends Controller
             if (!$newsCategoryId) {
                 throw new Exception("News Category Id is Empty!", 1);
             }
-            NewsCategoryModel::findOrFail($newsCategoryId)->delete();
+            CategoryModel::findOrFail($newsCategoryId)->delete();
             $response = array(
                 "code" => 0,
                 "message" => "Success Delete Data"
@@ -157,7 +157,7 @@ class NewsCategoryController extends Controller
         DB::beginTransaction();
         try {
             $requestData = $request->input();
-            $getData = NewsCategoryModel::select("id", "name")
+            $getData = CategoryModel::select("id", "name")
                 ->where("status", 1);
             if (isset($requestData["search"]) && $requestData["search"]) {
                 $getData = $getData->where('name', 'like', '%' . $requestData["search"] . '%');

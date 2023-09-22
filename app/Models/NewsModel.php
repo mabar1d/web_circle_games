@@ -55,7 +55,7 @@ class NewsModel extends Model
 
     public function newsCategory()
     {
-        return $this->hasOne(NewsCategoryModel::class, 'id', 'news_category_id');
+        return $this->hasOne(CategoryModel::class, 'id', 'news_category_id');
     }
 
     public function pivotNewsTags()

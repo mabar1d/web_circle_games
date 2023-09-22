@@ -4,19 +4,24 @@ namespace App\Models;
 
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\Pivot;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Auth;
 
-class NewsTagsModel extends Model
+class CategoryModel extends Pivot
 {
     use HasFactory;
+    use SoftDeletes;
 
-    protected $table = 'news_with_tag';
+    protected $table = 'm_category';
     protected $primaryKey = 'id';
     protected $fillable = [
-        'news_id',
-        'news_tag_id'
+        'parent_id',
+        'name',
+        'desc',
+        'status'
     ];
+    protected $dates = ['deleted_at'];
 
     protected static function boot()
     {
@@ -38,20 +43,9 @@ class NewsTagsModel extends Model
         return Carbon::parse($this->attributes['created_at'])
             ->format('d M Y H:i');
     }
-
     public function getUpdatedAtAttribute() //to show updated_at column
     {
         return Carbon::parse($this->attributes['updated_at'])
             ->format('d M Y H:i');
-    }
-
-    public function news()
-    {
-        return $this->belongsTo(NewsModel::class);
-    }
-
-    public function tags()
-    {
-        return $this->belongsTo(TagsModel::class);
     }
 }
