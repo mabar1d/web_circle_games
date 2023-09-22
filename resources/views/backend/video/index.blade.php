@@ -89,7 +89,7 @@
             $('#tbl_list').DataTable({
                 processing: true,
                 serverSide: true,
-                ajax: "{{ url('be/news/getDatatable') }}",
+                ajax: "{{ url('be/video/getDatatable') }}",
                 order: [],
                 columns: [{
                         data: 'DT_RowIndex',
@@ -102,8 +102,8 @@
                         name: 'title'
                     },
                     {
-                        data: 'news_category_name',
-                        name: 'news_category_name'
+                        data: 'video_category_name',
+                        name: 'video_category_name'
                     },
                     {
                         data: 'tag',
@@ -123,7 +123,7 @@
                 drawCallback: function(settings) {
                     $(".btnView").click(function() {
                         let id = $(this).data('id');
-                        let urlBtnView = "{{ url('be/news/getFormAdd') }}";
+                        let urlBtnView = "{{ url('be/video/getFormAdd') }}";
                         $.ajax({
                             url: urlBtnView,
                             type: "POST",
@@ -145,7 +145,7 @@
                     $(".btnDelete").click(function() {
                         if (confirm('Are You Sure?')) {
                             let id = $(this).data('id');
-                            let urlBtnDelete = "{{ url('be/news/delete') }}";
+                            let urlBtnDelete = "{{ url('be/video/delete') }}";
                             $.ajax({
                                 url: urlBtnDelete,
                                 type: "POST",
@@ -172,7 +172,7 @@
                 e.preventDefault();
                 $.ajax({
                     type: "POST",
-                    url: "{{ url('be/news/getFormAdd') }}",
+                    url: "{{ url('be/video/getFormAdd') }}",
                     success: function(response) {
                         $('#modalFormAdd').empty();
                         $('#modalFormAdd').html(response);

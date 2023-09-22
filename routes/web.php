@@ -10,6 +10,7 @@ use App\Http\Controllers\Backend\NewsCategoryController;
 use App\Http\Controllers\Backend\NewsController;
 use App\Http\Controllers\Backend\TagsController;
 use App\Http\Controllers\Backend\TournamentMatchController;
+use App\Http\Controllers\Backend\VideoController;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Route;
 
@@ -77,6 +78,13 @@ $router->group(['prefix' => 'be', 'middleware' => 'auth'], function ($router) {
     $router->post('news/getFormAdd', [NewsController::class, 'getFormAdd']);
     $router->post('news/store', [NewsController::class, 'store']);
     $router->post('news/delete', [NewsController::class, 'delete']);
+
+    //MASTER GAME
+    $router->get('video', [VideoController::class, 'index']);
+    $router->get('video/getDatatable', [VideoController::class, 'getDatatable']);
+    $router->post('video/getFormAdd', [VideoController::class, 'getFormAdd']);
+    $router->post('video/store', [VideoController::class, 'store']);
+    $router->post('video/delete', [VideoController::class, 'delete']);
 
     //TOURNAMENT
     $router->get('tournament', [TournamentController::class, 'index']);

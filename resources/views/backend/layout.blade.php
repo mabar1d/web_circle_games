@@ -201,7 +201,7 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="" class="nav-link">
+                            <a href="{{ url('be/video') }}" class="nav-link">
                                 <i class="nav-icon far fa-newspaper nav-icon"></i>
                                 <p>
                                     Video
