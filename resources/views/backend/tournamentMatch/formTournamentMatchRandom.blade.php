@@ -25,13 +25,21 @@
                                     value="{{ $rowData['away_team_id'] }}" readonly>
                             </div>
                         </div>
-                        <div class="col-md-4">
-                            <div class="form-group">
-                                <label for="inputMatchDate">Match Date</label>
-                                <input type="text" class="form-control" id="inputMatchDate"
-                                    name="match_array[{{ $keyData }}][date]" placeholder="Tournament End Date">
+                        <!-- Date and time -->
+                        <div class="form-group">
+                            <label>Match Date and time</label>
+                            <div class="input-group date reservationdatetime"
+                                id="reservationdatetime{{ $keyData }}" data-target-input="nearest">
+                                <input type="text" class="form-control datetimepicker-input"
+                                    data-target="#reservationdatetime{{ $keyData }}"
+                                    name="match_array[{{ $keyData }}][date]" />
+                                <div class="input-group-append" data-target="#reservationdatetime{{ $keyData }}"
+                                    data-toggle="datetimepicker">
+                                    <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                                </div>
                             </div>
                         </div>
+                        <!-- /.form group -->
                     </div>
                 @endforeach
             </div>
@@ -45,6 +53,14 @@
 
 <script type="text/javascript">
     $(document).ready(function() {
+        //Date and time picker
+        $('.reservationdatetime').datetimepicker({
+            format: 'DD-MM-YYYY hh:mm A',
+            icons: {
+                time: 'far fa-clock'
+            }
+        });
+
         $("#formInputTournamentMatch").submit(function(e) {
             e.preventDefault();
             var formSerialize = $("#formInputTournamentMatch").serialize();
