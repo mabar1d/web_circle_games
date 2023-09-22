@@ -2,10 +2,9 @@
 
 namespace App\Http\Controllers\Backend;
 
-use App\Helpers\ApiCircleGamesHelper;
 use App\Http\Controllers\Controller;
+use App\Models\ContentTagsModel;
 use App\Models\NewsModel;
-use App\Models\NewsTagsModel;
 use App\Models\TagsModel;
 use Exception;
 use Illuminate\Http\Request;
@@ -141,7 +140,7 @@ class NewsController extends Controller
             }
 
             //delete all news tag where not in update tag in table news_with_tag
-            NewsTagsModel::where("news_id", $storeNews["id"])->delete();
+            ContentTagsModel::where("content_type", 'news')->where("content_id", $storeNews["id"])->delete();
             if (is_array($tags)) {
                 $arrayNewsTagId = array();
                 foreach ($tags as $rowNewsTag) {
@@ -154,10 +153,11 @@ class NewsController extends Controller
                     $newsTagId = isset($getNewsTag["id"]) ? (int)$getNewsTag["id"] : (int)$createdNewsTag->id;
                     $arrayNewsTagId[] = $newsTagId;
                     $insertNewsWithTag = array(
-                        "news_id" => $storeNews["id"],
-                        "news_tag_id" => $newsTagId
+                        "content_type" => "news",
+                        "content_id" => $storeNews["id"],
+                        "tag_id" => $newsTagId
                     );
-                    NewsTagsModel::updateOrcreate($insertNewsWithTag);
+                    ContentTagsModel::updateOrcreate($insertNewsWithTag);
                 }
             }
 

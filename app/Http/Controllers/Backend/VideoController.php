@@ -3,9 +3,9 @@
 namespace App\Http\Controllers\Backend;
 
 use App\Http\Controllers\Controller;
+use App\Models\ContentTagsModel;
 use App\Models\TagsModel;
 use App\Models\VideoModel;
-use App\Models\VideoTagsModel;
 use Exception;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
@@ -142,7 +142,7 @@ class VideoController extends Controller
             }
 
             //delete all news tag where not in update tag in table news_with_tag
-            VideoTagsModel::where("video_id", $storeVideo["video_id"])->delete();
+            ContentTagsModel::where("content_type", 'video')->where("content_id", $storeVideo["video_id"])->delete();
             if (is_array($tags)) {
                 $arrayVideoTagId = array();
                 foreach ($tags as $rowVideoTag) {
@@ -155,10 +155,11 @@ class VideoController extends Controller
                     $videoTagId = isset($getVideoTag["id"]) ? (int)$getVideoTag["id"] : (int)$createdVideoTag->id;
                     $arrayVideoTagId[] = $videoTagId;
                     $insertVideoWithTag = array(
-                        "video_id" => $storeVideo["video_id"],
+                        "content_type" => "video",
+                        "content_id" => $storeVideo["video_id"],
                         "tag_id" => $videoTagId
                     );
-                    VideoTagsModel::updateOrcreate($insertVideoWithTag);
+                    ContentTagsModel::updateOrcreate($insertVideoWithTag);
                 }
             }
 

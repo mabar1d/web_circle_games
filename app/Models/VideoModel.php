@@ -60,17 +60,12 @@ class VideoModel extends Model
         return $this->hasOne(NewsCategoryModel::class, 'id', 'category_id');
     }
 
-    public function videoTag()
-    {
-        return $this->hasMany(VideoTagsModel::class, 'id', 'video_id');
-    }
-
     public function pivotVideoTags()
     {
         return $this->belongsToMany(
             TagsModel::class,
-            VideoTagsModel::class,
-            'video_id',
+            ContentTagsModel::class,
+            'content_id',
             'tag_id'
         );
     }

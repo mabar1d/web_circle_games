@@ -58,28 +58,13 @@ class NewsModel extends Model
         return $this->hasOne(NewsCategoryModel::class, 'id', 'news_category_id');
     }
 
-    public function newsTags()
-    {
-        return $this->hasMany(NewsTagsModel::class, 'news_id', 'id');
-    }
-
-    // public function newsTags()
-    // {
-    //     return $this->hasManyThrough(
-    //         TagsModel::class,
-    //         NewsTagsModel::class,
-    //         'news_id',
-    //         'id'
-    //     );
-    // }
-
     public function pivotNewsTags()
     {
         return $this->belongsToMany(
             TagsModel::class,
-            NewsTagsModel::class,
-            'news_id',
-            'news_tag_id'
+            ContentTagsModel::class,
+            'content_id',
+            'tag_id'
         );
     }
 }
