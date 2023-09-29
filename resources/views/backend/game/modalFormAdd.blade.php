@@ -20,6 +20,9 @@
                         <label for="inputDesc">Description</label>
                         <textarea name="gameDesc" class="form-control" id="inputDesc" cols="10" rows="5" placeholder="Description">{{ isset($data['desc']) && $data['desc'] ? $data['desc'] : null }}</textarea>
                     </div>
+                    @if (isset($data['game_image_url']))
+                        <img src="{{ $data['game_image_url'] }}" alt="{{ $data['image'] }}">
+                    @endif
                     <div class="form-group">
                         <label for="inputImage">File input</label>
                         <div class="input-group">
@@ -49,18 +52,25 @@
     <!-- /.modal-content -->
 </div>
 <!-- /.modal-dialog -->
-
+<script>
+    $(function() {
+        bsCustomFileInput.init();
+    });
+</script>
 <script type="text/javascript">
     $(document).ready(function() {
         $("#formModalAdd").submit(function(e) {
             e.preventDefault();
-            var form = $("#formModalAdd");
+            var form = new FormData(this);
             $.ajax({
                 type: "POST",
                 url: "{{ url('be/master/game/store') }}",
-                data: form.serialize(),
+                data: form,
                 dataType: "json",
                 encode: true,
+                cache: false,
+                contentType: false,
+                processData: false,
                 success: function(response) {
                     alert(response.message);
                     if (response.code == 0) {

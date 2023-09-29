@@ -60,6 +60,7 @@ class GameController extends Controller
                 if ($gameId) {
                     $isDisabled = true;
                     $data = GameModel::findOrFail($gameId);
+                    $data['game_image_url'] = env('URL_API_CIRCLE_GAMES') . "upload/masterGame/" . $gameId . "/" . $data["image"];
                 }
                 $throwData = [
                     "data" => $data,
@@ -101,7 +102,7 @@ class GameController extends Controller
                     throw new Exception("Game Already Exist!", 1);
                 }
             }
-            GameModel::updateOrCreate(
+            $insertGame = GameModel::updateOrCreate(
                 [
                     "id" => $gameId
                 ],
@@ -112,6 +113,45 @@ class GameController extends Controller
                 "message" => "Success Store Data"
             );
             DB::commit();
+
+            //upload image to api
+            if (isset($_FILES['gameImage'])) {
+                $file               = request('gameImage');
+                $file_path          = $file->getPathname();
+                $file_mime          = $file->getMimeType('image');
+                $file_uploaded_name = $file->getClientOriginalName();
+                $api_url = env('URL_API_CIRCLE_GAMES') . 'api/uploadImageGame';
+
+                $client = new \GuzzleHttp\Client();
+
+                $responseApi = $client->request("POST", $api_url, [
+                    // jika menggunakan authorization
+                    'headers' => ['Authorization' => 'Bearer ' . env('GOD_BEARER_TOKEN')],
+                    'multipart' => [
+                        [
+                            'name' => 'image_file',
+                            'filename' => $file_uploaded_name,
+                            'Mime-Type' => $file_mime,
+                            'contents' => fopen($file_path, 'r'),
+                        ],
+                        [
+                            'name' => 'game_id',
+                            'contents' => $insertGame["id"],
+                        ],
+                        [
+                            'name' => 'user_id',
+                            'contents' => 1,
+                        ],
+                    ],
+                    'verify' => false
+                ]);
+
+                $responseApi   = $responseApi->getBody();
+                $responseApiData = json_decode($responseApi, true);
+                if ($responseApiData["code"] != '00') {
+                    throw new Exception($responseApiData["desc"], 1);
+                }
+            }
         } catch (Exception $e) {
             $response = array(
                 "code" => $e->getCode(),
