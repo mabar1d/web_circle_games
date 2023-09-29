@@ -116,14 +116,47 @@ class NewsController extends Controller
             // $image = isset($requestData["newsImage"]) && $requestData["newsImage"] ? trim($requestData["newsImage"]) : NULL;
             $status = isset($requestData["newsStatus"]) && $requestData["newsStatus"] ? $requestData["newsStatus"] : 0;
             $tags = isset($requestData["newsTags"]) && $requestData["newsTags"] ? $requestData["newsTags"] : 0;
+
             $dataStore = array(
                 "news_category_id" => $newsCategory,
                 "title" => $title,
                 "slug" => Str::slug($title),
                 "content" => $content,
-                // "image" => $image,
                 "status" => $status
             );
+
+            //upload image to api
+            if (request('newsImage')) {
+                $file               = request('newsImage');
+                $file_path          = $file->getPathname();
+                $file_mime          = $file->getMimeType('image');
+                $file_uploaded_name = $file->getClientOriginalName();
+                $api_url = env('URL_API_CIRCLE_GAMES') . '/api/uploadImageNews';
+
+                $client = new \GuzzleHttp\Client();
+
+                $responseApi = $client->request("POST", $api_url, [
+                    // jika menggunakan authorization
+                    'headers' => ['Authorization' => 'Bearer ' . env('GOD_BEARER_TOKEN')],
+                    'multipart' => [
+                        [
+                            'name' => 'image_file',
+                            'filename' => $file_uploaded_name,
+                            'Mime-Type' => $file_mime,
+                            'contents' => fopen($file_path, 'r'),
+                        ]
+                    ],
+                    'verify' => false
+                ]);
+
+                $responseApi   = $responseApi->getBody();
+                $responseApiData = json_decode($responseApi, true);
+                if ($responseApiData["code"] != '00') {
+                    throw new Exception($responseApiData["desc"], 1);
+                }
+                $dataStore["image"] = isset($responseApiData["data"]["filename"]) && $responseApiData["data"]["filename"] ? $responseApiData["data"]["filename"] : NULL;
+            }
+
             if (!$newsId) {
                 $checkDataExist = NewsModel::where("title", $title)->count();
                 if ($checkDataExist != 0) {
@@ -167,45 +200,6 @@ class NewsController extends Controller
                 "message" => "Success Store Data"
             );
             DB::commit();
-
-            //upload image to api
-            if (isset($_FILES['newsImage'])) {
-                $file               = request('newsImage');
-                $file_path          = $file->getPathname();
-                $file_mime          = $file->getMimeType('image');
-                $file_uploaded_name = $file->getClientOriginalName();
-                $api_url = env('URL_API_CIRCLE_GAMES') . '/api/uploadImageNews';
-
-                $client = new \GuzzleHttp\Client();
-
-                $responseApi = $client->request("POST", $api_url, [
-                    // jika menggunakan authorization
-                    'headers' => ['Authorization' => 'Bearer ' . env('GOD_BEARER_TOKEN')],
-                    'multipart' => [
-                        [
-                            'name' => 'image_file',
-                            'filename' => $file_uploaded_name,
-                            'Mime-Type' => $file_mime,
-                            'contents' => fopen($file_path, 'r'),
-                        ],
-                        [
-                            'name' => 'news_id',
-                            'contents' => $storeNews["id"],
-                        ],
-                        [
-                            'name' => 'user_id',
-                            'contents' => 1,
-                        ],
-                    ],
-                    'verify' => false
-                ]);
-
-                $responseApi   = $responseApi->getBody();
-                $responseApiData = json_decode($responseApi, true);
-                if ($responseApiData["code"] != '00') {
-                    throw new Exception($responseApiData["desc"], 1);
-                }
-            }
         } catch (Exception $e) {
             $response = array(
                 "code" => $e->getCode(),

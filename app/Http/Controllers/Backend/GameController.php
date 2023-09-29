@@ -60,7 +60,7 @@ class GameController extends Controller
                 if ($gameId) {
                     $isDisabled = true;
                     $data = GameModel::findOrFail($gameId);
-                    $data['game_image_url'] = env('URL_API_CIRCLE_GAMES') . "upload/masterGame/" . $gameId . "/" . $data["image"];
+                    $data['game_image_url'] = env('URL_API_CIRCLE_GAMES') . "upload/masterGame/" . $data["image"];
                 }
                 $throwData = [
                     "data" => $data,
@@ -88,34 +88,16 @@ class GameController extends Controller
             $gameId = isset($requestData["gameId"]) && $requestData["gameId"] ? $requestData["gameId"] : NULL;
             $title = isset($requestData["gameTitle"]) && $requestData["gameTitle"] ? trim($requestData["gameTitle"]) : NULL;
             $desc = isset($requestData["gameDesc"]) && $requestData["gameDesc"] ? trim($requestData["gameDesc"]) : NULL;
-            $image = isset($requestData["gameImage"]) && $requestData["gameImage"] ? trim($requestData["gameImage"]) : NULL;
             $status = isset($requestData["gameStatus"]) && $requestData["gameStatus"] ? $requestData["gameStatus"] : 0;
+
             $dataStore = array(
                 "title" => $title,
                 "desc" => $desc,
-                "image" => $image,
                 "status" => $status
             );
-            if (!$gameId) {
-                $checkDataExist = GameModel::where("title", $title)->count();
-                if ($checkDataExist != 0) {
-                    throw new Exception("Game Already Exist!", 1);
-                }
-            }
-            $insertGame = GameModel::updateOrCreate(
-                [
-                    "id" => $gameId
-                ],
-                $dataStore
-            );
-            $response = array(
-                "code" => 0,
-                "message" => "Success Store Data"
-            );
-            DB::commit();
 
             //upload image to api
-            if (isset($_FILES['gameImage'])) {
+            if (request('gameImage')) {
                 $file               = request('gameImage');
                 $file_path          = $file->getPathname();
                 $file_mime          = $file->getMimeType('image');
@@ -133,15 +115,7 @@ class GameController extends Controller
                             'filename' => $file_uploaded_name,
                             'Mime-Type' => $file_mime,
                             'contents' => fopen($file_path, 'r'),
-                        ],
-                        [
-                            'name' => 'game_id',
-                            'contents' => $insertGame["id"],
-                        ],
-                        [
-                            'name' => 'user_id',
-                            'contents' => 1,
-                        ],
+                        ]
                     ],
                     'verify' => false
                 ]);
@@ -151,7 +125,27 @@ class GameController extends Controller
                 if ($responseApiData["code"] != '00') {
                     throw new Exception($responseApiData["desc"], 1);
                 }
+
+                $dataStore["image"] = isset($responseApiData["data"]["filename"]) && $responseApiData["data"]["filename"] ? $responseApiData["data"]["filename"] : NULL;
             }
+
+            if (!$gameId) {
+                $checkDataExist = GameModel::where("title", $title)->count();
+                if ($checkDataExist != 0) {
+                    throw new Exception("Game Already Exist!", 1);
+                }
+            }
+            $insertGame = GameModel::updateOrCreate(
+                [
+                    "id" => $gameId
+                ],
+                $dataStore
+            );
+            $response = array(
+                "code" => 0,
+                "message" => "Success Store Data"
+            );
+            DB::commit();
         } catch (Exception $e) {
             $response = array(
                 "code" => $e->getCode(),
