@@ -6,10 +6,13 @@
                 <span aria-hidden="true">&times;</span>
             </button>
         </div>
-        <form id="formModalAdd">
+        <form id="formModalAdd" method="POST" enctype="multipart/form-data">
             <input type="hidden" name="newsId" value="{{ isset($data['id']) && $data['id'] ? $data['id'] : null }}">
             <div class="modal-body">
                 <div class="card-body">
+                    @if (isset($data['news_image_url']))
+                        <img src="{{ $data['news_image_url'] }}" alt="{{ $data['image'] }}">
+                    @endif
                     <div class="form-group">
                         <label for="inputImage">Image</label>
                         <div class="input-group">
@@ -72,7 +75,11 @@
     <!-- /.modal-content -->
 </div>
 <!-- /.modal-dialog -->
-
+<script>
+    $(function() {
+        bsCustomFileInput.init();
+    });
+</script>
 <script type="text/javascript">
     $(document).ready(function() {
         //Initialize Select2 Elements
@@ -143,13 +150,16 @@
 
         $("#formModalAdd").submit(function(e) {
             e.preventDefault();
-            var form = $("#formModalAdd");
+            var form = new FormData(this);
             $.ajax({
                 type: "POST",
                 url: "{{ url('be/news/store') }}",
-                data: form.serialize(),
+                data: form,
                 dataType: "json",
                 encode: true,
+                cache: false,
+                contentType: false,
+                processData: false,
                 success: function(response) {
                     alert(response.message);
                     if (response.code == 0) {

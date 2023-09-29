@@ -80,6 +80,7 @@ class NewsController extends Controller
                     $data = $data->toArray();
                     $data['news_category_name'] = $newsCategoryName;
                     $data['array_tags'] = $newsTags;
+                    $data['news_image_url'] = env('URL_API_CIRCLE_GAMES') . "/upload/news/" . $data["image"];
                 }
                 $throwData = [
                     "data" => $data,
@@ -112,7 +113,7 @@ class NewsController extends Controller
             $newsCategory = isset($requestData["newsCategory"]) && $requestData["newsCategory"] ? $requestData["newsCategory"] : NULL;
             $title = isset($requestData["newsTitle"]) && $requestData["newsTitle"] ? trim($requestData["newsTitle"]) : NULL;
             $content = isset($requestData["newsContent"]) && $requestData["newsContent"] ? trim($requestData["newsContent"]) : NULL;
-            $image = isset($requestData["newsImage"]) && $requestData["newsImage"] ? trim($requestData["newsImage"]) : NULL;
+            // $image = isset($requestData["newsImage"]) && $requestData["newsImage"] ? trim($requestData["newsImage"]) : NULL;
             $status = isset($requestData["newsStatus"]) && $requestData["newsStatus"] ? $requestData["newsStatus"] : 0;
             $tags = isset($requestData["newsTags"]) && $requestData["newsTags"] ? $requestData["newsTags"] : 0;
             $dataStore = array(
@@ -120,7 +121,7 @@ class NewsController extends Controller
                 "title" => $title,
                 "slug" => Str::slug($title),
                 "content" => $content,
-                "image" => $image,
+                // "image" => $image,
                 "status" => $status
             );
             if (!$newsId) {
@@ -166,6 +167,45 @@ class NewsController extends Controller
                 "message" => "Success Store Data"
             );
             DB::commit();
+
+            //upload image to api
+            if (isset($_FILES['newsImage'])) {
+                $file               = request('newsImage');
+                $file_path          = $file->getPathname();
+                $file_mime          = $file->getMimeType('image');
+                $file_uploaded_name = $file->getClientOriginalName();
+                $api_url = env('URL_API_CIRCLE_GAMES') . '/api/uploadImageNews';
+
+                $client = new \GuzzleHttp\Client();
+
+                $responseApi = $client->request("POST", $api_url, [
+                    // jika menggunakan authorization
+                    'headers' => ['Authorization' => 'Bearer ' . env('GOD_BEARER_TOKEN')],
+                    'multipart' => [
+                        [
+                            'name' => 'image_file',
+                            'filename' => $file_uploaded_name,
+                            'Mime-Type' => $file_mime,
+                            'contents' => fopen($file_path, 'r'),
+                        ],
+                        [
+                            'name' => 'news_id',
+                            'contents' => $storeNews["id"],
+                        ],
+                        [
+                            'name' => 'user_id',
+                            'contents' => 1,
+                        ],
+                    ],
+                    'verify' => false
+                ]);
+
+                $responseApi   = $responseApi->getBody();
+                $responseApiData = json_decode($responseApi, true);
+                if ($responseApiData["code"] != '00') {
+                    throw new Exception($responseApiData["desc"], 1);
+                }
+            }
         } catch (Exception $e) {
             $response = array(
                 "code" => $e->getCode(),
