@@ -7,7 +7,7 @@
         <div class="hero-slider owl-carousel">
             @foreach ($listNews as $rowNews)
                 <a href="#">
-                    <div class="hs-item set-bg" data-setbg="{{ $rowNews['image'] }}">
+                    <div class="hs-item set-bg" data-setbg="{{ $rowNews['url_image'] }}">
                         {{-- <div class="hs-text">
                         <div class="container">
                             <h2>The Best <span>Games</span> Out There</h2>
@@ -46,8 +46,8 @@
             <div class="row">
                 @foreach ($listNews as $rowNews)
                     <div class="col-lg-3 col-md-6 p-0">
-                        <div class="feature-item set-bg" data-setbg="{{ $rowNews['image'] }}">
-                            <span class="cata new">{{ $rowNews['news_category_name'] }}</span>
+                        <div class="feature-item set-bg" data-setbg="{{ $rowNews['url_image'] }}">
+                            <span class="cata new">{{ $rowNews['category_name'] }}</span>
                             <div class="fi-content text-white">
                                 <h5><a href="#">{{ $rowNews['title'] }}</a></h5>
                                 {{-- <p>{!! substr($rowNews['content'], 0, 50) !!}.... </p> --}}
@@ -65,67 +65,34 @@
     <section class="recent-game-section spad set-bg" data-setbg="{{ asset('gameWarrior/img/recent-game-bg.png') }}">
         <div class="container">
             <div class="section-title">
-                <div class="cata new">new</div>
-                <h2>Recent Games</h2>
+                <div class="cata adventure">Videos</div>
+                <h2>Recent Videos</h2>
             </div>
             <div class="row">
-                <div class="col-lg-4 col-md-6">
-                    <div class="recent-game-item">
-                        <div class="rgi-thumb set-bg" data-setbg="{{ asset('gameWarrior/img/recent-game/1.jpg') }}">
-                            <div class="cata new">new</div>
-                        </div>
-                        <div class="rgi-content">
-                            <h5>Suspendisse ut justo tem por, rutrum</h5>
-                            <p>Lorem ipsum dolor sit amet, consectetur adipisc ing ipsum dolor sit amet, consectetur elit.
-                            </p>
-                            <a href="#" class="comment">3 Comments</a>
-                            <div class="rgi-extra">
-                                <div class="rgi-star"><img src="{{ asset('gameWarrior/img/icons/star.png') }}"
-                                        alt=""></div>
-                                <div class="rgi-heart"><img src="{{ asset('gameWarrior/img/icons/heart.png') }}"
-                                        alt=""></div>
+                @foreach ($listVideos as $rowVideo)
+                    <div class="col-lg-4 col-md-6">
+                        <div class="recent-game-item">
+                            <div class="rgi-content">
+                                <div class="cata adventure" style="margin-bottom:5px;">
+                                    {{ $rowVideo['category_name'] }}
+                                </div>
+                                <iframe width="300" height="204" src="{{ $rowVideo['youtube_embed'] }}"></iframe>
+
+                                <h5>{{ $rowVideo['title'] }}</h5>
+                                <p>
+                                    {!! substr($rowVideo['content'], 0, 100) !!}....
+                                </p>
+                                {{-- <a href="#" class="comment">3 Comments</a> --}}
+                                {{-- <div class="rgi-extra">
+                                    <div class="rgi-star"><img src="{{ asset('gameWarrior/img/icons/star.png') }}"
+                                            alt=""></div>
+                                    <div class="rgi-heart"><img src="{{ asset('gameWarrior/img/icons/heart.png') }}"
+                                            alt=""></div>
+                                </div> --}}
                             </div>
                         </div>
                     </div>
-                </div>
-                <div class="col-lg-4 col-md-6">
-                    <div class="recent-game-item">
-                        <div class="rgi-thumb set-bg" data-setbg="{{ asset('gameWarrior/img/recent-game/2.jpg') }}">
-                            <div class="cata racing">racing</div>
-                        </div>
-                        <div class="rgi-content">
-                            <h5>Susce pulvinar metus nulla, vel facilisis sem </h5>
-                            <p>Lorem ipsum dolor sit amet, consectetur adipisc ing ipsum dolor sit amet, consectetur elit.
-                            </p>
-                            <a href="#" class="comment">3 Comments</a>
-                            <div class="rgi-extra">
-                                <div class="rgi-star"><img src="{{ asset('gameWarrior/img/icons/star.png') }}"
-                                        alt=""></div>
-                                <div class="rgi-heart"><img src="{{ asset('gameWarrior/img/icons/heart.png') }}"
-                                        alt=""></div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-4 col-md-6">
-                    <div class="recent-game-item">
-                        <div class="rgi-thumb set-bg" data-setbg="{{ asset('gameWarrior/img/recent-game/3.jpg') }}">
-                            <div class="cata adventure">Adventure</div>
-                        </div>
-                        <div class="rgi-content">
-                            <h5>Suspendisse ut justo tem por, rutrum</h5>
-                            <p>Lorem ipsum dolor sit amet, consectetur adipisc ing ipsum dolor sit amet, consectetur elit.
-                            </p>
-                            <a href="#" class="comment">3 Comments</a>
-                            <div class="rgi-extra">
-                                <div class="rgi-star"><img src="{{ asset('gameWarrior/img/icons/star.png') }}"
-                                        alt=""></div>
-                                <div class="rgi-heart"><img src="{{ asset('gameWarrior/img/icons/heart.png') }}"
-                                        alt=""></div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                @endforeach
             </div>
         </div>
     </section>
