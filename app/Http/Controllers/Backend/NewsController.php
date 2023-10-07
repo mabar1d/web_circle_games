@@ -46,7 +46,7 @@ class NewsController extends Controller
                     return $result;
                 })
                 ->addColumn('news_category_name', function ($row) {
-                    $result = isset($row->newsCategory->name) && $row->newsCategory->name ? $row->newsCategory->name : null;
+                    $result = isset($row->newsCategory) ? $row->newsCategory->name : null;
                     return $result;
                 })
                 ->addColumn('tag', function ($row) {
