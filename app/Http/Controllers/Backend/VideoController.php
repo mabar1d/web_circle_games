@@ -75,7 +75,7 @@ class VideoController extends Controller
                 if ($videoId) {
                     $isDisabled = true;
                     $data = VideoModel::findOrFail($videoId);
-                    $videoCategoryName = $data->category->name;
+                    $videoCategoryName = isset($data->category) ? $data->category->name : null;
                     $videoTags = $data->pivotVideoTags->pluck("name", "id")->toArray();
                     $data = $data->toArray();
                     $data['video_category_name'] = $videoCategoryName;

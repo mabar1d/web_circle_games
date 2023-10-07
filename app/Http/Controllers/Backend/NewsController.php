@@ -75,7 +75,7 @@ class NewsController extends Controller
                 if ($newsId) {
                     $isDisabled = true;
                     $data = NewsModel::findOrFail($newsId);
-                    $newsCategoryName = $data->newsCategory->name;
+                    $newsCategoryName = isset($data->newsCategory) ? $data->newsCategory->name : NULL;
                     $newsTags = $data->pivotNewsTags->pluck("name", "id")->toArray();
                     $data = $data->toArray();
                     $data['news_category_name'] = $newsCategoryName;
