@@ -79,9 +79,9 @@
                                 <iframe width="300" height="204" src="{{ $rowVideo['youtube_embed'] }}"></iframe>
 
                                 <h5>{{ $rowVideo['title'] }}</h5>
-                                <p>
+                                {{-- <p>
                                     {!! substr($rowVideo['content'], 0, 100) !!}....
-                                </p>
+                                </p> --}}
                                 {{-- <a href="#" class="comment">3 Comments</a> --}}
                                 {{-- <div class="rgi-extra">
                                     <div class="rgi-star"><img src="{{ asset('gameWarrior/img/icons/star.png') }}"
