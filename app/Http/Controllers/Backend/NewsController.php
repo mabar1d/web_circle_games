@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Backend;
 
 use App\Http\Controllers\Controller;
 use App\Models\ContentTagsModel;
+use App\Models\JobNotifFirebaseModel;
 use App\Models\NewsModel;
 use App\Models\TagsModel;
 use Exception;
@@ -194,6 +195,19 @@ class NewsController extends Controller
                     ContentTagsModel::updateOrcreate($insertNewsWithTag);
                 }
             }
+
+            // if ($storeNews->wasRecentlyCreated) {
+            //     // updateOrCreate performed create
+            //     JobNotifFirebaseModel::create(array(
+            //         "notif_type" => "news",
+            //         "client_key" => "",
+            //         "notif_title" => $title,
+            //         "notif_body" => substr($content, 0, 100),
+            //         "notif_img_url" => env("URL_API_CIRCLE_GAMES") . "/upload/news/" . $dataStore["image"],
+            //         "notif_url" => url("news-1-update")
+
+            //     ));
+            // }
 
             $response = array(
                 "code" => 0,

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Backend;
 
 use App\Http\Controllers\Controller;
 use App\Models\ContentTagsModel;
+use App\Models\JobNotifFirebaseModel;
 use App\Models\TagsModel;
 use App\Models\VideoModel;
 use Exception;
@@ -162,6 +163,20 @@ class VideoController extends Controller
                     ContentTagsModel::updateOrcreate($insertVideoWithTag);
                 }
             }
+
+            if ($storeVideo->wasRecentlyCreated) {
+                // updateOrCreate performed create
+                JobNotifFirebaseModel::create(array(
+                    "notif_type" => "videos",
+                    "client_key" => "eukHxDWBS3Ws1dq0NU7rAl:APA91bFOQ6zAstOMzATWm4FK1emwY_4DOxPJ33mdUectTpXEoJG2dHGNOBqcmfOnk0rN9YwgXZV8x15xp6Fq4kkmqeTl65ENiuGC1gpvHHOG5hl37P0pR2Db5JRq6hDtAw5ybpBoRgCj",
+                    "notif_title" => $title,
+                    "notif_body" => substr($content, 0, 100),
+                    "notif_img_url" => "https://img.youtube.com/vi/" . $dataStore["link"] . "/maxresdefault.jpg",
+                    "notif_url" => "https://www.youtube.com/watch?v=" . $dataStore["link"],
+                    "status" => 0
+                ));
+            }
+
 
             $response = array(
                 "code" => 0,
