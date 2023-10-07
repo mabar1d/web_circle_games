@@ -19,7 +19,7 @@ class HomeController extends BaseController
         $resultListNews = [];
         foreach ($listNews as $rowNews) {
             $rowNews["url_image"] = env('URL_API_CIRCLE_GAMES') . '/upload/news/' . $rowNews['image'];
-            $rowNews["category_name"] = $rowNews->newsCategory->name;
+            $rowNews["category_name"] = isset($rowNews->newsCategory) ? $rowNews->newsCategory->name : NULL;
             $resultListNews[] = $rowNews;
         }
 
@@ -31,7 +31,7 @@ class HomeController extends BaseController
         foreach ($listVideo as $rowVideo) {
             $rowVideo["youtube_embed"] = "https://www.youtube.com/embed/" . $rowVideo["link"] . "?loop=1";
             $rowVideo["url_image"] = "https://img.youtube.com/vi/" . $rowVideo["link"] . "/maxresdefault.jpg";
-            $rowVideo["category_name"] = $rowVideo->category->name;
+            $rowVideo["category_name"] = isset($rowNews->newsCategory) ? $rowNews->newsCategory->name : NULL;
             $resultListVideos[] = $rowVideo;
         }
         // dd($resultListVideos);
