@@ -46,7 +46,7 @@ class VideoController extends Controller
                     return $result;
                 })
                 ->addColumn('video_category_name', function ($row) {
-                    $result = isset($row->category->name) && $row->category->name ? $row->category->name : null;
+                    $result = isset($row->category) ? $row->category->name : null;
                     return $result;
                 })
                 ->addColumn('tag', function ($row) {
