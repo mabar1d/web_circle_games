@@ -21,7 +21,8 @@
                         <textarea name="gameDesc" class="form-control" id="inputDesc" cols="10" rows="5" placeholder="Description">{{ isset($data['desc']) && $data['desc'] ? $data['desc'] : null }}</textarea>
                     </div>
                     @if (isset($data['game_image_url']))
-                        <img src="{{ $data['game_image_url'] }}" alt="{{ $data['image'] }}">
+                        <img src="{{ $data['game_image_url'] }}" alt="{{ $data['image'] }}" width="350"
+                            height="250">
                     @endif
                     <div class="form-group">
                         <label for="inputImage">File input</label>

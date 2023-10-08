@@ -11,7 +11,8 @@
             <div class="modal-body">
                 <div class="card-body">
                     @if (isset($data['news_image_url']))
-                        <img src="{{ $data['news_image_url'] }}" alt="{{ $data['image'] }}">
+                        <img src="{{ $data['news_image_url'] }}" alt="{{ $data['image'] }}" width="350"
+                            height="250">
                     @endif
                     <div class="form-group">
                         <label for="inputImage">Image</label>

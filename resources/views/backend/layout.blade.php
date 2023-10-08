@@ -179,7 +179,7 @@
                                 <li class="nav-item">
                                     <a href="{{ url('be/master/category') }}" class="nav-link">
                                         <i class="far fa-newspaper nav-icon"></i>
-                                        <p>Master Category</p>
+                                        <p>Category</p>
                                     </a>
                                 </li>
                             </ul>
