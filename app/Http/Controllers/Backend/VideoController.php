@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\ContentTagsModel;
 use App\Models\JobNotifFirebaseModel;
 use App\Models\TagsModel;
+use App\Models\UserApkModel;
 use App\Models\VideoModel;
 use Exception;
 use Illuminate\Support\Str;
@@ -165,16 +166,21 @@ class VideoController extends Controller
             }
 
             if ($storeVideo->wasRecentlyCreated) {
-                // updateOrCreate performed create
-                JobNotifFirebaseModel::create(array(
-                    "notif_type" => "videos",
-                    "client_key" => "eukHxDWBS3Ws1dq0NU7rAl:APA91bFOQ6zAstOMzATWm4FK1emwY_4DOxPJ33mdUectTpXEoJG2dHGNOBqcmfOnk0rN9YwgXZV8x15xp6Fq4kkmqeTl65ENiuGC1gpvHHOG5hl37P0pR2Db5JRq6hDtAw5ybpBoRgCj",
-                    "notif_title" => $title,
-                    "notif_body" => substr($content, 0, 100),
-                    "notif_img_url" => "https://img.youtube.com/vi/" . $dataStore["link"] . "/maxresdefault.jpg",
-                    "notif_url" => "https://www.youtube.com/watch?v=" . $dataStore["link"],
-                    "status" => 0
-                ));
+                $getAllUserApk = UserApkModel::select("token_firebase")
+                    ->whereNotNull("token_firebase")
+                    ->get();
+                foreach ($getAllUserApk as $rowAllUserApk) {
+                    // updateOrCreate performed create
+                    JobNotifFirebaseModel::create(array(
+                        "notif_type" => "videos",
+                        "client_key" => $rowAllUserApk["token_firebase"],
+                        "notif_title" => $title,
+                        "notif_body" => substr($content, 0, 100),
+                        "notif_img_url" => "https://img.youtube.com/vi/" . $dataStore["link"] . "/maxresdefault.jpg",
+                        "notif_url" => "https://www.youtube.com/watch?v=" . $dataStore["link"],
+                        "status" => 0
+                    ));
+                }
             }
 
             $response = array(
