@@ -51,7 +51,6 @@ class DashboardController extends Controller
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
         curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($fields));
         $result = curl_exec($ch);
-        dd($result);
         if ($result) {
             return json_decode($result);
         } else return false;
