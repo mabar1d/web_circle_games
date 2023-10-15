@@ -46,6 +46,7 @@ $router->group(['prefix' => 'callbackMidtrans'], function ($router) {
 
 $router->group(['prefix' => 'be', 'middleware' => 'auth'], function ($router) {
     $router->get('dashboard', [DashboardController::class, 'index']);
+    $router->get('test_send_notif', [DashboardController::class, 'testSendNotif']);
 
     //MASTER GAME
     $router->get('master/game', [GameController::class, 'index']);
