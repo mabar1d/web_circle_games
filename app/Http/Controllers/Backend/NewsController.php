@@ -7,6 +7,7 @@ use App\Models\ContentTagsModel;
 use App\Models\JobNotifFirebaseModel;
 use App\Models\NewsModel;
 use App\Models\TagsModel;
+use App\Models\UserApkModel;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
@@ -196,18 +197,23 @@ class NewsController extends Controller
                 }
             }
 
-            // if ($storeNews->wasRecentlyCreated) {
-            //     // updateOrCreate performed create
-            //     JobNotifFirebaseModel::create(array(
-            //         "notif_type" => "news",
-            //         "client_key" => "",
-            //         "notif_title" => $title,
-            //         "notif_body" => substr($content, 0, 100),
-            //         "notif_img_url" => env("URL_API_CIRCLE_GAMES") . "/upload/news/" . $dataStore["image"],
-            //         "notif_url" => url("news-1-update")
-
-            //     ));
-            // }
+            if ($storeNews->wasRecentlyCreated) {
+                $getAllUserApk = UserApkModel::select("token_firebase")
+                    ->whereNotNull("token_firebase")
+                    ->get();
+                foreach ($getAllUserApk as $rowAllUserApk) {
+                    // updateOrCreate performed create
+                    JobNotifFirebaseModel::create(array(
+                        "notif_type" => "news",
+                        "client_key" => $rowAllUserApk["token_firebase"],
+                        "notif_title" => $title,
+                        "notif_body" => substr($content, 0, 100),
+                        "notif_img_url" => env('URL_API_CIRCLE_GAMES') . "/upload/news/" . $dataStore["image"],
+                        "notif_url" => "",
+                        "status" => 0
+                    ));
+                }
+            }
 
             $response = array(
                 "code" => 0,
