@@ -66,10 +66,10 @@ class GameController extends Controller
                 return Datatables::of($listGame["data"])
                     ->addIndexColumn()
                     ->setTotalRecords($countData)
-                    // ->with([
-                    //     "draw" => (int)$draw,
-                    //     "data" => $listGame["data"]
-                    // ])
+                    ->with([
+                        "draw" => (int)$draw,
+                        // "data" => $listGame["data"]
+                    ])
                     ->editColumn('status', function ($row) {
                         $result = isset($row['status']) && $row['status'] ? '<span class="badge bg-success">Active</span>' : '<span class="badge bg-danger">Inactive</span>';
                         return $result;
