@@ -17,7 +17,6 @@ class ApiCircleGamesHelper
             'verify'  => false,
         ]);
         $responseBody = json_decode($response->getBody(), true);
-        $responseApi = json_encode($responseBody);
-        return $responseApi;
+        return $responseBody;
     }
 }

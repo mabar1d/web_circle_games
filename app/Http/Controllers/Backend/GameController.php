@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers\Backend;
 
+use App\Helpers\ApiCircleGamesHelper;
 use App\Http\Controllers\Controller;
 use App\Models\GameModel;
 use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Yajra\DataTables\Facades\DataTables;
 
@@ -23,29 +25,66 @@ class GameController extends Controller
 
     public function getDatatable(Request $request)
     {
-        if (request()->ajax()) {
-            $requestData = $request->input();
-            $listGame = GameModel::select(
-                'id',
-                'title',
-                'desc',
-                'image',
-                'status'
-            );
-            return Datatables::of($listGame)
-                ->addIndexColumn()
-                ->editColumn('status', function ($row) {
-                    $result = isset($row['status']) && $row['status'] ? '<span class="badge bg-success">Active</span>' : '<span class="badge bg-danger">Inactive</span>';
-                    return $result;
-                })
-                ->addColumn('action', function ($row) {
-                    $result = "";
-                    $result .= '<button type="button" class="btn btn-warning btn-xs m-1 btnView" data-id="' . $row['id'] . '">View</button>';
-                    $result .= '<button type="button" class="btn btn-danger btn-xs m-1 btnDelete" data-id="' . $row['id'] . '">Delete</button>';
-                    return $result;
-                })
-                ->rawColumns(['status', 'action'])
-                ->make();
+        try {
+            if (request()->ajax()) {
+                $requestData = $request->input();
+                $draw = $requestData['draw'];
+                $search = isset($requestData['search']['value']) && $requestData['search']['value'] ? $requestData['search']['value'] : "";
+                $orderBy = isset($requestData['order_by']) && $requestData['order_by'] ? $requestData['order_by'] : NULL;
+                $orderByMethod = isset($requestData['order_by_method']) && $requestData['order_by_method'] ? $requestData['order_by_method'] : NULL;
+                $offset = isset($requestData['start']) && $requestData['start'] ? $requestData['start'] : NULL;
+                $limit = isset($requestData['length']) && $requestData['length'] ? $requestData['length'] : NULL;
+                $status = isset($requestData['status']) && $requestData['status'] ? $requestData['status'] : NULL;
+                $body = [
+                    'user_id' => Auth::id(),
+                    'search' => $search,
+                    'order_by' => $orderBy,
+                    'order_by_method' => $orderByMethod,
+                    'limit' => $limit,
+                    'offset' => $offset,
+                    'status' => $status
+                ];
+                $listGame = ApiCircleGamesHelper::sendRequestApi('POST', 'getListMasterGame', NULL, $body);
+                if ($listGame["code"] != "00") {
+                    throw new Exception($listGame["message"], $listGame["code"]);
+                }
+
+                // $resultData = array();
+                // foreach ($listGame["data"] as $rowData) {
+                //     $resultData[] = [];
+                // }
+
+                $countListGame = ApiCircleGamesHelper::sendRequestApi('POST', 'countMasterGame', NULL, [
+                    'user_id' => Auth::id(),
+                    'status' => $status
+                ]);
+                if ($countListGame["code"] != "00") {
+                    throw new Exception($countListGame["message"], $countListGame["code"]);
+                }
+                $countData = $countListGame["data"]["totalCount"];
+
+                return Datatables::of($listGame["data"])
+                    ->addIndexColumn()
+                    ->setTotalRecords($countData)
+                    // ->with([
+                    //     "draw" => (int)$draw,
+                    //     "data" => $listGame["data"]
+                    // ])
+                    ->editColumn('status', function ($row) {
+                        $result = isset($row['status']) && $row['status'] ? '<span class="badge bg-success">Active</span>' : '<span class="badge bg-danger">Inactive</span>';
+                        return $result;
+                    })
+                    ->addColumn('action', function ($row) {
+                        $result = "";
+                        $result .= '<button type="button" class="btn btn-warning btn-xs m-1 btnView" data-id="' . $row['id'] . '">View</button>';
+                        $result .= '<button type="button" class="btn btn-danger btn-xs m-1 btnDelete" data-id="' . $row['id'] . '">Delete</button>';
+                        return $result;
+                    })
+                    ->rawColumns(['status', 'action'])
+                    ->make();
+            }
+        } catch (Exception $e) {
+            return $e->getMessage();
         }
     }
 
